@@ -3,7 +3,7 @@ import sequelize from "../db/config.js";
 
 class PublicationTag extends Model { }
 
-PublicationTag(
+PublicationTag.init(
     {
         idTag : {
             type: DataTypes.INTEGER,

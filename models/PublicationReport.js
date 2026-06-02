@@ -1,5 +1,5 @@
-import {DataTypes, Model,sequelize} from "sequelize";
-import sequelize from "../db/config";
+import {DataTypes, Model} from "sequelize";
+import sequelize from "../db/config.js";
 
 class PublicationReport extends Model{};
 
@@ -8,7 +8,6 @@ PublicationReport.init(
         idPublicationReport: {
             type: DataTypes.INTEGER,
             allowNull: false,
-            unique: true,
             autoIncrement: true,
             primaryKey: true,
         },
@@ -30,7 +29,7 @@ PublicationReport.init(
     },
     {
         sequelize,
-        tableName: 'users',
+        tableName: 'publicationReports',
         timestamps: true,
     }
 );

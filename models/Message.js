@@ -1,5 +1,5 @@
 import { Model, DataTypes } from "sequelize";
-import sequelize from "../db/config";
+import sequelize from "../db/config.js";
 
 class Message extends Model {};
 
@@ -9,7 +9,6 @@ Message.init(
             type: DataTypes.INTEGER,
             primaryKey: true,
             autoIncrement: true,
-            unique: true,
             allowNull: false,
         },
         idSender: {

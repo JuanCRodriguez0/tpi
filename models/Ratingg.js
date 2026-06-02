@@ -1,14 +1,13 @@
 import { Model, DataTypes } from "sequelize";
-import sequelize from "../db/config";
+import sequelize from "../db/config.js";
 
-class Rating extends Model {}
+class Ratingg extends Model {}
 
-Rating.init(
+Ratingg.init(
     {
         idRating : {
             type: DataTypes.INTEGER,
             allowNull: false,
-            unique: true,
             autoIncrement: true,
             primaryKey: true,
         },
@@ -31,3 +30,5 @@ Rating.init(
         timestamps: true,
     },
 );
+
+export default Ratingg;

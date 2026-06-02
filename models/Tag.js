@@ -1,5 +1,5 @@
-import {DataTypes, Model,sequelize} from "sequelize";
-import sequelize from "../db/config";
+import {DataTypes, Model} from "sequelize";
+import sequelize from "../db/config.js";
 
 class Tag extends Model{};
 
@@ -8,7 +8,6 @@ Tag.init(
         idTag: {
             type: DataTypes.INTEGER,
             allowNull: false,
-            unique: true,
             primaryKey: true,
             autoIncrement: true,
         },
