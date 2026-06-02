@@ -1,0 +1,46 @@
+extends layout.pug
+
+block content
+
+    nav.navbar.navbar-expand-lg.bg-primary.container-fluid
+
+        a.navbar-brand(href="/home") Fotaza
+            button.navbar-toggler(type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation")
+                span.navbar-toggler-icon
+
+        #navbarSupportedContent.collapse.navbar-collapse
+            ul.navbar-nav.me-auto.mb-2.mb-lg-0
+                li.nav-item
+                    a.nav-link.active(aria-current="page" href="#") Inicio
+                li.nav-item
+                    a.nav-link.active(href="/profile") Perfil
+                li.nav-item.dropdown
+                    a.nav-link.dropdown-toggle.active(href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false") Imagenes
+                    ul.dropdown-menu
+                        li
+                            a.dropdown-item(href="#") Con copyright
+                        li
+                            a.dropdown-item(href="#") Sin copyright
+                li.nav-item.dropdown
+                    button.btn.btn-outline-light.bg-primary(href="/post") + Nueva Publicación
+            
+
+        form.d-flex.me-3(role="search")
+            input.form-control.me-3(type="search" placeholder="Buscar" aria-label="Buscar")
+            button.btn.btn-outline-light.bg-primary(type="submit") Buscar
+
+    .container.mt-4
+        if publications && publications.length > 0
+            each pub in publications
+                .card.mb-4
+                    .card-header
+                        strong #{pub.User.userName}
+                    .card-body
+                        h5.card-title #{pub.title}
+                        if pub.description
+                            p.card-text #{pub.description}
+                    .card-footer.text-muted
+                        small #{pub.createdAt}
+        else
+            .text-center.mt-5
+                p No hay publicaciones para mostrar.

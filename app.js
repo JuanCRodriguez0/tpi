@@ -4,6 +4,7 @@ import sequelize from "./db/config.js";
 import "./models/index.js";
 import { connectDatabase } from "./models/index.js";
 import authRoutes from './routes/auth.js';
+import homeRoutes from './routes/home.js';
 
 
 // CONSTANTES
@@ -14,9 +15,15 @@ const PORT = process.env.PORT;
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(session({
-    secret: process.env.SESSION_SECRET || 'clave_secreta',
+    secret: process.env.SESSION_KEY,
     resave: false,
     saveUninitialized: false,
+    cookie: {
+        secure: false, // produccion cambiar a true
+        maxAge: 24 * 60 * 60 * 1000, // 24h
+        httpOnly: true,
+        sameSite: 'lax',
+    },
 }));
 
 // MOTOR DE PLANTILLAS
@@ -32,6 +39,11 @@ app.get('/register', (req, res) => {
     res.render('auth/register');
 })
 
+app.get('/home', (req,res) => {
+    res.render('home');
+})
+
+app.use('/', homeRoutes);
 
 app.use('/', authRoutes);
 
