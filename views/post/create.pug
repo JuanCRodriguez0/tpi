@@ -1,0 +1,81 @@
+extends ../layout.pug
+
+block content 
+    .d-flex.justify-content-center.align-items-center(style="min-height: 100vh;")
+      .card.p-4(style="width: 400px;")
+        h1.text-center.mb-4 Nueva publicación
+
+        if alert
+          .alert.alert-danger.text-center #{alert.text}
+
+        form(action="/post/create" method="POST")
+          .mb-3
+            label.form-label.fs-4 Titulo
+            input.form-control.border-secondary(type="text" name="title" placeholder="Titulo")
+
+          .mb-3
+            label.form-label.fs-4 Descripción
+            input.form-control.border-secondary(type="text" name="description" placeholder="Descripción")
+
+          .mb-3
+            label.form-label.fs-4 Imágenes
+            input.form-control.border-secondary(type="file" name="images" id="imagenes" multiple)
+            #preview.d-flex.flex-wrap.gap-2.mt-2
+            #imagenesContainer
+
+          .mb-3 
+            label.form-label.mb-0.fs-4 Etiquetas
+            label.text-muted.small Ingrese las etiquetas separadas con coma
+            input.form-control.border-secondary(
+              type="text" 
+              id="inputEtiqueta"
+              placeholder="Paisaje,montañas,arboles..."
+            )
+            .d-flex.flex-wrap.gap-2.mt-2#chipsContainer
+              input(type="hidden" name="etiquetas" id="etiquetasHidden")
+
+          .mb-3
+                label.form-label.fs-4 ¿Su imagen tiene Copyright?
+                select.form-select.border-secondary(name="copyright")
+                    option(value="" disabled selected) Seleccionar
+                    option(value="false") Sin Copyright
+                    option(value="true") Con Copyright
+
+          .d-flex.justify-content-center.gap-3.mt-3
+            button.btn.btn-dark(type="submit") Publicar
+            a.button.btn.btn-dark(href="/home") Cancelar
+
+block scripts
+    script.
+        document.querySelector('form').addEventListener('keydown', (e) => {
+            if (e.key === 'Enter' && e.target.type !== 'submit') {
+                e.preventDefault()
+            }
+        })
+
+        document.getElementById('imagenes').addEventListener('change', (e) => {
+            const archivos = Array.from(e.target.files)
+            const preview = document.getElementById('preview')
+            const container = document.getElementById('imagenesContainer')
+            
+            preview.innerHTML = ''
+            container.innerHTML = ''
+
+            archivos.forEach((archivo) => {
+                const reader = new FileReader()
+                reader.onload = (event) => {
+                    const base64 = event.target.result
+                    const input = document.createElement('input')
+                    input.type = 'hidden'
+                    input.name = 'imagenesBase64'
+                    input.value = base64
+                    container.appendChild(input)
+
+                    const img = document.createElement('img')
+                    img.src = base64
+                    img.style.cssText = 'width:80px; height:80px; object-fit:cover; border-radius:8px;'
+                    preview.appendChild(img)
+                }
+                reader.readAsDataURL(archivo)
+            })
+        })

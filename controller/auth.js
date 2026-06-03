@@ -54,6 +54,8 @@ export async function login(req, res) {
         req.session.user = {
             id: user.idUser,
         };
+
+        res.redirect('/home')
     } catch (error) {
         console.log('[!] Error en login: ', error);
         res.status(500).render('auth/login', {
@@ -65,8 +67,6 @@ export async function login(req, res) {
         })
         return;
     }
-
-    res.redirect('/home')
 }
 
 export async function registerForm(req, res) {
