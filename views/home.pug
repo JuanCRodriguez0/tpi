@@ -40,14 +40,21 @@ block content
                                         button.btn.btn-link.text-white.px-2.py-1(type="button" data-bs-toggle="dropdown")
                                         |⋮
                                         ul.dropdown-menu.dropdown-menu-end
+                                            li
+                                                if pub.commentsOpen
+                                                    a.dropdown-item(href=`/post/closeComments/${pub.idPublication}`) Cerrar comentarios
+                                                else
+                                                    a.dropdown-item(href=`/post/openComments/${pub.idPublication}`) Abrir comentarios
+
                                             if pub.idUser === currentUser.id
                                                 li
-                                                    a.dropdown-item(href=`/post/edit/${pub.idPublication}`) Editar
+                                                    a.dropdown-item(href=`/post/edit/${pub.idPublication}`) Editar publicación
                                                 li
                                                     a.dropdown-item.text-danger(href=`/post/delete/${pub.idPublication}`) Eliminar
                                             else
                                                 li
                                                     a.dropdown-item.text-warning(href=`/post/report/${pub.idPublication}`) Denunciar
+                                            
                             .card-body
                                 h5.card-title #{pub.title}
                                 if pub.description

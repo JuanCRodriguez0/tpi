@@ -81,3 +81,29 @@ export async function create(req, res) {
         });
     }
 }
+
+export async function closeComments(req, res) {
+    const { idPublication } = req.params;
+    const userId = req.session.user.id;
+
+    const publication = await Publication.findByPk(idPublication);
+
+    if (publication.idUser === userId) {
+        await publication.update({ commentsOpen: false });
+    }
+
+    res.redirect('/home');
+}
+
+export async function openComments(req, res) {
+    const { idPublication } = req.params;
+    const userId = req.session.user.id;
+
+    const publication = await Publication.findByPk(idPublication);
+
+    if (publication.idUser === userId) {
+        await publication.update({ commentsOpen: true });
+    }
+
+    res.redirect('/home');
+}
