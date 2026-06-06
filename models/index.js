@@ -76,7 +76,6 @@ export async function connectDatabase(){
     try{
         await sequelize.authenticate();
         console.log("Database connected.")
-        sequelize.options.logging = (sql) => console.log(sql);
         await sequelize.sync({ alter: true })
         console.log("Tables synchronized.")
     }catch (err){

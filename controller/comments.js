@@ -21,7 +21,6 @@ export async function commentsView(req, res) {
         currentUser: req.session.user
     });
 
-    console.log('pub.commentsOpen:', publication.commentsOpen);
 }
 
 export async function addComment(req, res) {
@@ -42,7 +41,6 @@ export async function addComment(req, res) {
 
     res.redirect(`/comments/${idPublication}`);
 }
-
 
 
 export async function deleteComment(req, res) {

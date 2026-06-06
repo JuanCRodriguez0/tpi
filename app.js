@@ -7,6 +7,8 @@ import authRoutes from './routes/auth.js';
 import homeRoutes from './routes/home.js';
 import postRoutes from './routes/post.js'
 import commentRoutes from './routes/comments.js';
+import ratingRoutes from './routes/rating.js';
+
 
 
 
@@ -36,14 +38,6 @@ app.set('view engine', 'pug');
 app.set('views', './views');
 
 // RUTAS
-app.get('/', (req, res) => {
-    res.render('auth/login');
-})
-
-app.get('/register', (req, res) => {
-    res.render('auth/register');
-})
-
 app.use('/', homeRoutes);
 
 app.use('/', postRoutes);
@@ -51,6 +45,8 @@ app.use('/', postRoutes);
 app.use('/', authRoutes);
 
 app.use('/', commentRoutes);
+
+app.use('/', ratingRoutes);
 
 
 // SERVIDOR

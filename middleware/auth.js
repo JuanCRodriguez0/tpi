@@ -1,13 +1,13 @@
 import User from "../models/User.js";
 
 export async function authMiddleware(req, res, next) {
-    const user = req.session.user; // usuario de la sesion solo contiene id
+    const user = req.session.user;
     if (!user) {
         res.redirect('/auth/login');
         return;
     }
 
-    const userId = Number(user.idUser);
+    const userId = Number(user.id);
 
     try {
         const user = await User.findByPk(userId, {
