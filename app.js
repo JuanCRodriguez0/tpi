@@ -8,6 +8,7 @@ import homeRoutes from './routes/home.js';
 import postRoutes from './routes/post.js'
 import commentRoutes from './routes/comments.js';
 import ratingRoutes from './routes/rating.js';
+import profileRoutes from './routes/profile.js';
 
 
 
@@ -38,6 +39,7 @@ app.set('view engine', 'pug');
 app.set('views', './views');
 
 // RUTAS
+
 app.use('/', homeRoutes);
 
 app.use('/', postRoutes);
@@ -47,6 +49,8 @@ app.use('/', authRoutes);
 app.use('/', commentRoutes);
 
 app.use('/', ratingRoutes);
+
+app.use('/', profileRoutes);
 
 
 // SERVIDOR

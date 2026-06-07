@@ -11,7 +11,7 @@ block content
         #navbarSupportedContent.collapse.navbar-collapse
             ul.navbar-nav.me-auto.mb-2.mb-lg-0
                 li.nav-item
-                    a.nav-link.active(aria-current="page" href="#") Inicio
+                    a.nav-link.active(aria-current="page" href="/home") Inicio
                 li.nav-item
                     a.nav-link.active(href="/profile") Perfil
                 li.nav-item.dropdown
@@ -40,20 +40,19 @@ block content
                                         a.btn.btn-link.text-dark.text-decoration-none.px-2.py-1.fs-5(type="button" data-bs-toggle="dropdown" )
                                             |•••
                                         ul.dropdown-menu.dropdown-menu-end
-                                            li
-                                                if pub.commentsOpen
-                                                    a.dropdown-item(href=`/post/closeComments/${pub.idPublication}`) Cerrar comentarios
-                                                else
-                                                    a.dropdown-item(href=`/post/openComments/${pub.idPublication}`) Abrir comentarios
-
                                             if pub.idUser === currentUser.id
+                                                li
+                                                    if pub.commentsOpen
+                                                        a.dropdown-item(href=`/post/closeComments/${pub.idPublication}`) Cerrar comentarios
+                                                    else
+                                                        a.dropdown-item(href=`/post/openComments/${pub.idPublication}`) Abrir comentarios
                                                 li
                                                     a.dropdown-item(href=`/post/edit/${pub.idPublication}`) Editar publicación
                                                 li
                                                     a.dropdown-item.text-danger(href=`/post/delete/${pub.idPublication}`) Eliminar
                                             else
                                                 li
-                                                    a.dropdown-item.text-warning(href=`/post/report/${pub.idPublication}`) Denunciar
+                                                    a.dropdown-item.text-danger(href=`/post/report/${pub.idPublication}`) Denunciar
                                             
                             .card-body.d-flex.flex-column
                                 h5.card-title #{pub.title}

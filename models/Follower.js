@@ -5,16 +5,13 @@ class Follower extends Model { }
 
 Follower.init(
     {
-        idFollower : {
+        idFollower: {
             type: DataTypes.INTEGER,
             allowNull: false,
-            primaryKey: true,
-            autoIncrement: true,
         },
         idFollowed: {
             type: DataTypes.INTEGER,
             allowNull: false,
-            unique: true,
         },
     },
     {

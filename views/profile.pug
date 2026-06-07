@@ -1,4 +1,211 @@
 extends layout.pug 
 
-block content 
+block content
+
+    nav.navbar.navbar-expand-lg.bg-primary.container-fluid
+
+        a.navbar-brand(href="/home") Fotaza
+            button.navbar-toggler(type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation")
+                span.navbar-toggler-icon
+
+        #navbarSupportedContent.collapse.navbar-collapse
+            ul.navbar-nav.me-auto.mb-2.mb-lg-0
+                li.nav-item
+                    a.nav-link.active(aria-current="page" href="/home") Inicio
+                li.nav-item
+                    a.nav-link.active(href="/profile") Perfil
+                li.nav-item.dropdown
+                    a.nav-link.dropdown-toggle.active(href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false") Imagenes
+                    ul.dropdown-menu
+                        li
+                            a.dropdown-item(href="#") Con copyright
+                        li
+                            a.dropdown-item(href="#") Sin copyright
+                li.nav-item
+                    a.btn.btn-outline-light.bg-primary(href="/post/create") + Nueva Publicación
+
+        form.d-flex.me-3(role="search")
+            input.form-control.me-3(type="search" placeholder="Buscar" aria-label="Buscar")
     
+
+    .container.mt4 
+        .card.mb-4.p-4
+            
+            .d-flex.align-items-center.gap-4.justify-content-center.position-relative
+                if user.profilePhoto
+                    img.rounded-circle(
+                        src=`data:image/jpeg;base64,${user.profilePhoto.toString('base64')}`
+                        style="width: 100px; height: 100px; object-fit: cover;"
+                    )
+                else
+                    .rounded-circle.bg-secondary.d-flex.align-items-center.justify-content-center(
+                        style="width: 100px; height: 100px;"
+                    )
+                        span.text-white.fs-1 #{user.userName[0].toUpperCase()}
+
+                .d-flex.flex-column.gap-2
+                    h4.mb-0 #{user.name} #{user.lastName}
+                    span.text-muted @#{user.userName}
+                    if user.idUser === currentUser.id
+                        a.btn.btn-outline-dark.btn-sm.mt-2.mx-auto(href="/profile/edit" style="width: 280px") 
+                            | Editar perfil
+                    else if isFollowing
+                        form.mx-auto.mt-2(action=`/profile/unfollow/${user.idUser}` method="POST")
+                            button.btn.btn-outline-dark.btn-sm(type="submit" style="width: 280px") 
+                                | Dejar de seguir
+                    else
+                        form.mx-auto.mt-2(action=`/profile/follow/${user.idUser}` method="POST")
+                            button.btn.btn-outline-dark.btn-sm(type="submit" style="width: 280px")
+                                | Seguir
+
+                    if user.description
+                        p.mb-0 #{user.description}
+                    .d-flex.gap-4.mt-2
+                        div.d-flex.align-items-center
+                            strong #{publications.length}
+                            small publicaciones
+                        div.d-flex.align-items-center
+                            strong #{followers}
+                            a.small.text-dark(href="#", data-bs-toggle="modal", data-bs-target="#modalSeguidores") seguidores
+                        div.d-flex.align-items-center
+                            strong #{following}
+                            a.small.text-dark(href="#", data-bs-toggle="modal", data-bs-target="#modalSeguidos") seguidos
+                            
+
+        
+        .row.justify-content-center.align-items-stretch
+            if publications && publications.length > 0
+                each pub in publications
+                    .col-12.col-md-6.col-lg-4
+                        .card.mb-4(style="height: 600px; overflow: hidden;")
+                            - const carouselId = `carousel-${pub.idPublication}`
+                            .card-header.d-flex.justify-content-between.align-items-center
+                                strong #{user.userName}
+                                .dropdown
+                                    button.btn.btn-link.text-dark.text-decoration-none.px-2.py-1.fs-3(type="button" data-bs-toggle="dropdown")
+                                        | •••
+                                    ul.dropdown-menu.dropdown-menu-end
+                                        if pub.idUser === currentUser.id
+                                            li
+                                                if pub.commentsOpen
+                                                    a.dropdown-item(href=`/post/closeComments/${pub.idPublication}`) Cerrar comentarios
+                                                else
+                                                    a.dropdown-item(href=`/post/openComments/${pub.idPublication}`) Abrir comentarios
+                                            li
+                                                a.dropdown-item(href=`/post/edit/${pub.idPublication}`) Editar publicación
+                                            li
+                                                a.dropdown-item.text-danger(href=`/post/delete/${pub.idPublication}`) Eliminar
+                                        else
+                                            li
+                                                a.dropdown-item.text-danger(href=`/post/report/${pub.idPublication}`) Denunciar
+
+                            .card-body.d-flex.flex-column
+                                h5.card-title #{pub.title}
+                                if pub.description
+                                    p.card-text #{pub.description}
+
+                                if pub.Images.length === 1
+                                    img.img-fluid.w-100(
+                                        src=`data:image/jpeg;base64,${pub.Images[0].image.toString('base64')}`
+                                        style="max-height: 250px; object-fit: contain;"
+                                    )
+                                else if pub.Images.length > 1
+                                    div(id=carouselId).carousel.slide
+                                        .carousel-indicators
+                                            each img, index in pub.Images
+                                                button(
+                                                    type="button"
+                                                    data-bs-target=`#${carouselId}`
+                                                    data-bs-slide-to=`${index}`
+                                                    class=index === 0 ? 'active' : ''
+                                                )
+                                        .carousel-inner
+                                            each img, index in pub.Images
+                                                div(class=`carousel-item ${index === 0 ? 'active' : ''}`)
+                                                    img.d-block.w-100(
+                                                        src=`data:image/jpeg;base64,${img.image.toString('base64')}`
+                                                        style="max-height: 250px; object-fit: contain;"
+                                                    )
+                                        button.carousel-control-prev(type="button" data-bs-target=`#${carouselId}` data-bs-slide="prev")
+                                            span.carousel-control-prev-icon
+                                        button.carousel-control-next(type="button" data-bs-target=`#${carouselId}` data-bs-slide="next")
+                                            span.carousel-control-next-icon
+
+                                .mt-auto
+                                    .d-flex.gap-2.mt-3.justify-content-center.align-items-center
+                                        a.btn.btn-outline-dark.d-flex.align-items-center(href=`/comments/${pub.idPublication}`) Ver comentarios
+                                        form(action=`/rating/${pub.idPublication}` method="POST")
+                                            input(type="hidden" name="idImage" value=`${pub.Images[0].idImage}`)
+                                            .d-flex.gap-1
+                                                each score in [1,2,3,4,5]
+                                                    button.btn.btn-outline-dark.btn-sm(type="submit" name="score" value=`${score}`) #{score}
+                                        if ratings && ratings[pub.idPublication]
+                                            small.text-muted Calificaste con #{ratings[pub.idPublication]}
+                                        else
+                                            small.text-muted Sin calificar
+                                    if ratingsStats && ratingsStats[pub.idPublication] && ratingsStats[pub.idPublication].avg
+                                        small.text-muted ⭐ (#{ratingsStats[pub.idPublication].avg}) #{ratingsStats[pub.idPublication].total} #{ratingsStats[pub.idPublication].total === 1 ? 'voto' : 'votos'}
+                                    else
+                                        small.text-muted Sin votos aún
+
+                            .card-footer.text-muted
+                                small #{new Date(pub.createdAt).toLocaleDateString('es-AR')} - #{new Date(pub.createdAt).toLocaleTimeString('es-AR', { hour: '2-digit', minute: '2-digit' })}
+            
+            
+            else
+                .text-center.mt-5
+                    p No tenés publicaciones aún.
+    
+    #modalSeguidores.modal.fade(tabindex="-1")
+        .modal-dialog
+            .modal-content
+                .modal-header
+                    h5.modal-title Seguidores
+                    button.btn-close(type="button" data-bs-dismiss="modal")
+                .modal-body
+                    if followersList && followersList.length > 0
+                        each f in followersList
+                            a.text-dark.text-decoration-none(href=`/profile/${f.idUser}`)
+                                .d-flex.align-items-center.gap-3.mb-3
+                                    if f.profilePhoto
+                                        img.rounded-circle(
+                                            src=`data:image/jpeg;base64,${f.profilePhoto.toString('base64')}`
+                                            style="width: 45px; height: 45px; object-fit: cover;"
+                                        )
+                                    else
+                                        .rounded-circle.bg-secondary.d-flex.align-items-center.justify-content-center(
+                                            style="width: 45px; height: 45px;"
+                                        )
+                                            span.text-white #{f.userName[0].toUpperCase()}
+                                    .d-flex.flex-column
+                                        span.fw-bold @#{f.userName}
+                                        small.text-muted #{f.name} #{f.lastName}
+                    else
+                        p.text-muted Sin seguidores aún.
+
+    #modalSeguidos.modal.fade(tabindex="-1")
+        .modal-dialog
+            .modal-content
+                .modal-header
+                    h5.modal-title Seguidos
+                    button.btn-close(type="button" data-bs-dismiss="modal")
+                .modal-body
+                    if followingList && followingList.length > 0
+                        each f in followingList
+                            a.text-dark.text-decoration-none(href=`/profile/${f.idUser}`)
+                                .d-flex.align-items-center.gap-3.mb-3
+                                    if f.profilePhoto
+                                        img.rounded-circle(
+                                            src=`data:image/jpeg;base64,${f.profilePhoto.toString('base64')}`
+                                            style="width: 45px; height: 45px; object-fit: cover;"
+                                        )
+                                    else
+                                        .rounded-circle.bg-secondary.d-flex.align-items-center.justify-content-center(
+                                            style="width: 45px; height: 45px;"
+                                        )
+                                            span.text-white #{f.userName[0].toUpperCase()}
+                                    .d-flex.flex-column
+                                        span.fw-bold @#{f.userName}
+                                        small.text-muted #{f.name} #{f.lastName}
+                    else
+                        p.text-muted No seguís a nadie aún.
