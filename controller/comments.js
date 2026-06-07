@@ -1,11 +1,16 @@
 import Comment from "../models/Comment.js";
 import User from "../models/User.js";
 import Publication from "../models/Publication.js";
+import Image from "../models/Image.js";
 
 export async function commentsView(req, res) {
+    if (!req.session.user) return res.redirect('/');
+    
     const { idPublication } = req.params;
 
-    const publication = await Publication.findByPk(idPublication);
+    const publication = await Publication.findByPk(idPublication, {
+        include: [{ model: Image, attributes: ['idImage', 'image'] }]
+    });
 
     const comments = await Comment.findAll({
         where: { idPublication },
@@ -20,7 +25,6 @@ export async function commentsView(req, res) {
         publicationAuthorId: publication.idUser,
         currentUser: req.session.user
     });
-
 }
 
 export async function addComment(req, res) {

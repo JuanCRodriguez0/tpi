@@ -28,34 +28,65 @@ block content
 
     .container.d-flex.justify-content-center.mt-5
 
-        .card.p-4.position-relative(style="width: 400px;")
+        .card.p-4.position-relative(style="width: 800px;")
 
             a.btn.btn-outline-secondary.btn-sm.px-2.py-0.position-absolute.top-0.start-0.m-1(href="/home") ← Volver
 
             h1.text-center.mb-4 Comentarios
-                .border.rounded.p-2.mb-3(style="height: 300px; overflow-y: auto;")
-                    if comments && comments.length > 0
-                        each comment in comments
-                            .d-flex.flex-column.mb-2
-                                .d-flex.justify-content-between
-                                    small(style="font-size: 1rem;") #{comment.User.userName}
-                                    small.text-muted(style="font-size: 0.7rem;") #{new Date(comment.createdAt).toLocaleDateString('es-AR')} #{new Date(comment.createdAt).toLocaleTimeString('es-AR', { hour: '2-digit', minute: '2-digit' })}
-                                    if comment.idUser === currentUser.id || publicationAuthorId === currentUser.id
-                                        a.text-danger(style="font-size: 0.7rem;" href=`/comments/delete/${comment.idComment}`) Eliminar
-                                small.mb-0(style="font-size: 1.2rem;") #{comment.content}
-                                hr
-                    else
-                        p.text-center.text-muted No hay comentarios aún.
 
-                form(action=`/comments/${publicationId}` method="POST")
-                    .mb-2
-                        textarea.form-control(
-                            name="content"
-                            rows="3"
-                            placeholder=pub && pub.commentsOpen ? "Escribí un comentario..." : "Los comentarios están deshabilitados."
-                            disabled=pub && !pub.commentsOpen
+            .d-flex.gap-4
+                .d-flex.align-items-center.justify-content-center(style="width: 350px; min-width: 350px;")
+                    if pub.Images && pub.Images.length === 1
+                        img.img-fluid(
+                            src=`data:image/jpeg;base64,${pub.Images[0].image.toString('base64')}`
+                            style="max-height: 400px; object-fit: contain;"
                         )
-                    button.btn.btn-primary.w-100(type="submit" disabled=pub && !pub.commentsOpen) Comentar
+                    else if pub.Images && pub.Images.length > 1
+                        #carouselComentarios.carousel.slide(style="width: 350px;")
+                            .carousel-indicators
+                                each img, index in pub.Images
+                                    button(
+                                        type="button"
+                                        data-bs-target="#carouselComentarios"
+                                        data-bs-slide-to=`${index}`
+                                        class=index === 0 ? 'active' : ''
+                                    )
+                            .carousel-inner
+                                each img, index in pub.Images
+                                    div(class=`carousel-item ${index === 0 ? 'active' : ''}`)
+                                        img.d-block.w-100(
+                                            src=`data:image/jpeg;base64,${img.image.toString('base64')}`
+                                            style="max-height: 400px; object-fit: contain;"
+                                        )
+                            button.carousel-control-prev(type="button" data-bs-target="#carouselComentarios" data-bs-slide="prev")
+                                span.carousel-control-prev-icon
+                            button.carousel-control-next(type="button" data-bs-target="#carouselComentarios" data-bs-slide="next")
+                                span.carousel-control-next-icon
+
+                .d-flex.flex-column.flex-grow-1
+                    .border.rounded.p-2.mb-3(style="height: 300px; overflow-y: auto;")
+                        if comments && comments.length > 0
+                            each comment in comments
+                                .d-flex.flex-column.mb-2
+                                    .d-flex.justify-content-between
+                                        small(style="font-size: 1rem;") #{comment.User.userName}
+                                        small.text-muted(style="font-size: 0.7rem;") #{new Date(comment.createdAt).toLocaleDateString('es-AR')} #{new Date(comment.createdAt).toLocaleTimeString('es-AR', { hour: '2-digit', minute: '2-digit' })}
+                                        if comment.idUser === currentUser.id || publicationAuthorId === currentUser.id
+                                            a.text-danger(style="font-size: 0.7rem;" href=`/comments/delete/${comment.idComment}`) Eliminar
+                                    small.mb-0(style="font-size: 1.2rem;") #{comment.content}
+                                    hr
+                        else
+                            p.text-center.text-muted No hay comentarios aún.
+
+                    form(action=`/comments/${publicationId}` method="POST")
+                        .mb-2
+                            textarea.form-control(
+                                name="content"
+                                rows="3"
+                                placeholder=pub && pub.commentsOpen ? "Escribí un comentario..." : "Los comentarios están deshabilitados."
+                                disabled=pub && !pub.commentsOpen
+                            )
+                        button.btn.btn-primary.w-100(type="submit" disabled=pub && !pub.commentsOpen) Comentar
                                     
             
             
