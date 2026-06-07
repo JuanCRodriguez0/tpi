@@ -136,3 +136,27 @@ export async function openComments(req, res) {
 
     res.redirect('/home');
 }
+
+export async function deletePublication(req, res) {
+    const { idPublication } = req.params;
+    const userId = req.session.user.id;
+
+    try {
+        const publication = await Publication.findByPk(idPublication);
+
+        if (!publication) {
+            return res.redirect('/home');
+        }
+
+        if (publication.idUser !== userId) {
+            return res.redirect('/home');
+        }
+
+        await publication.destroy();
+
+        res.redirect('/home');
+    } catch (error) {
+        console.error('[!] Error al eliminar publicación:', error);
+        res.redirect('/home');
+    }
+}
