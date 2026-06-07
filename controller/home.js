@@ -3,6 +3,7 @@ import Publication from "../models/Publication.js";
 import Follower from "../models/Follower.js";
 import Image from "../models/Image.js";
 import Ratingg from "../models/Ratingg.js";
+import Tag from '../models/Tag.js';
 
 
 export async function home(req, res) {
@@ -39,6 +40,10 @@ export async function home(req, res) {
             {
                 model: Image,
                 attributes: ['idImage', 'image', 'copyright']
+            },
+            {
+                model: Tag,
+                model: Tag, attributes: ['idTag', 'name']
             }
         ],
         order: [

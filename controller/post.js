@@ -9,6 +9,9 @@ export async function createForm(req, res) {
 }
 
 export async function create(req, res) {
+    console.log('BODY:', req.body);
+    console.log('ETIQUETAS:', req.body.etiquetas);
+
     const { title, description, imagenesBase64, copyright, watermark, etiquetas } = req.body;
     const userId = req.session.user.id;
 

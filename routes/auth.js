@@ -1,13 +1,15 @@
 import { Router } from "express"
-import { login, loginForm, register, registerForm } from "../controller/auth.js"
+import { login, loginForm, register, registerForm, logout } from "../controller/auth.js"
 
-const auth = Router()
+const router = Router()
 
-auth.get('/', loginForm)
-auth.get('/login', loginForm)
-auth.post('/login', login)
+router.get('/', loginForm)
+router.get('/login', loginForm)
+router.post('/login', login)
 
-auth.get('/register', registerForm)
-auth.post('/register', register)
+router.get('/register', registerForm)
+router.post('/register', register)
 
-export default auth
+router.post('/logout', logout);
+
+export default router

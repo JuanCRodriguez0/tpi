@@ -9,24 +9,19 @@ block content
                 span.navbar-toggler-icon
 
         #navbarSupportedContent.collapse.navbar-collapse
-            ul.navbar-nav.me-auto.mb-2.mb-lg-0
+            ul.navbar-nav.me-auto.mb-2.mb-lg-0.gap-3
                 li.nav-item
                     a.nav-link.active(aria-current="page" href="/home") Inicio
                 li.nav-item
                     a.nav-link.active(href="/profile") Perfil
-                li.nav-item.dropdown
-                    a.nav-link.dropdown-toggle.active(href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false") Imagenes
-                    ul.dropdown-menu
-                        li
-                            a.dropdown-item(href="#") Con copyright
-                        li
-                            a.dropdown-item(href="#") Sin copyright
                 li.nav-item
                     a.btn.btn-outline-light.bg-primary(href="/post/create") + Nueva Publicación
 
         form.d-flex.me-3(role="search")
             input.form-control.me-3(type="search" placeholder="Buscar" aria-label="Buscar")
-    
+
+        form(action="/logout" method="POST")
+            button.btn.text-danger.me-3(type="submit") Cerrar sesión
 
     .container.mt4 
         .card.mb-4.p-4
@@ -48,7 +43,7 @@ block content
                     span.text-muted @#{user.userName}
                     if user.description
                         p.mb-0 #{user.description}
-                        
+
                     if user.idUser === currentUser.id
                         a.btn.btn-outline-dark.btn-sm.mt-2.mx-auto(href="#", data-bs-toggle="modal", data-bs-target="#modalEditarPerfil" style="width: 280px") 
                             | Editar perfil
@@ -104,6 +99,11 @@ block content
                                 h5.card-title #{pub.title}
                                 if pub.description
                                     p.card-text #{pub.description}
+                                
+                                if pub.Tags && pub.Tags.length > 0
+                                    .d-flex.flex-wrap.gap-1.mb-2
+                                        each tag in pub.Tags
+                                            span.badge.bg-secondary ##{tag.name}
 
                                 if pub.Images.length === 1
                                     img.img-fluid.w-100(

@@ -3,7 +3,7 @@ import Publication from "../models/Publication.js";
 import Follower from "../models/Follower.js";
 import Image from "../models/Image.js";
 import Ratingg from "../models/Ratingg.js";
-
+import Tag from '../models/Tag.js';
 
 export async function myProfile(req, res) {
     if (!req.session.user) return res.redirect('/');
@@ -42,7 +42,10 @@ export async function myProfile(req, res) {
             where: {
                 idUser: userId
             },
-            include: [{ model: Image, attributes: ['idImage', 'image'] }],
+            include: [
+                { model: Image, attributes: ['idImage', 'image'] },
+                { model: Tag, attributes: ['idTag', 'name'] }
+            ],
             order: [['createdAt', 'DESC']]
         });
 
@@ -104,9 +107,15 @@ export async function otherProfile(req, res) {
                 idFollower: userId
             }
         });
+
         const publications = await Publication.findAll({
-            where: { idUser: userId },
-            include: [{ model: Image, attributes: ['idImage', 'image'] }],
+            where: {
+                idUser: userId
+            },
+            include: [
+                { model: Image, attributes: ['idImage', 'image'] },
+                { model: Tag, attributes: ['idTag', 'name'] }
+            ],
             order: [['createdAt', 'DESC']]
         });
 

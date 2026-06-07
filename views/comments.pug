@@ -8,23 +8,20 @@ block content
                 span.navbar-toggler-icon
 
         #navbarSupportedContent.collapse.navbar-collapse
-            ul.navbar-nav.me-auto.mb-2.mb-lg-0
+            ul.navbar-nav.me-auto.mb-2.mb-lg-0.gap-3
                 li.nav-item
                     a.nav-link.active(aria-current="page" href="/home") Inicio
                 li.nav-item
                     a.nav-link.active(href="/profile") Perfil
-                li.nav-item.dropdown
-                    a.nav-link.dropdown-toggle.active(href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false") Imagenes
-                    ul.dropdown-menu
-                        li
-                            a.dropdown-item(href="#") Con copyright
-                        li
-                            a.dropdown-item(href="#") Sin copyright
                 li.nav-item
                     a.btn.btn-outline-light.bg-primary(href="/post/create") + Nueva Publicación
 
+
         form.d-flex.me-3(role="search")
             input.form-control.me-3(type="search" placeholder="Buscar" aria-label="Buscar")
+
+        form(action="/logout" method="POST")
+            button.btn.text-danger.me-3(type="submit") Cerrar sesión
 
     .container.d-flex.justify-content-center.mt-5
 
