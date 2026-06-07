@@ -35,11 +35,15 @@ block content
               input(type="hidden" name="etiquetas" id="etiquetasHidden")
 
           .mb-3
-                label.form-label.fs-4 ¿Su imagen tiene Copyright?
-                select.form-select.border-secondary(name="copyright")
-                    option(value="" disabled selected) Seleccionar
-                    option(value="false") Sin Copyright
-                    option(value="true") Con Copyright
+              label.form-label.fs-4 ¿Su imagen tiene Copyright?
+              select.form-select.border-secondary(name="copyright" id="copyright" required)
+                  option(value="" disabled selected) Seleccionar
+                  option(value="false") Sin Copyright
+                  option(value="true") Con Copyright
+
+          #marcaAguaContainer.mb-3(style="display:none;")
+              label.form-label.fs-4 Texto de marca de agua
+              input.form-control.border-secondary(type="text" name="watermark" placeholder="Ej: © Juan Cruz 2025")
 
           .d-flex.justify-content-center.gap-3.mt-3
             button.btn.btn-dark(type="submit") Publicar
@@ -47,6 +51,11 @@ block content
 
 block scripts
     script.
+        document.getElementById('copyright').addEventListener('change', function() {
+            const container = document.getElementById('marcaAguaContainer')
+            container.style.display = this.value === 'true' ? 'block' : 'none'
+        })
+
         document.querySelector('form').addEventListener('keydown', (e) => {
             if (e.key === 'Enter' && e.target.type !== 'submit') {
                 e.preventDefault()
