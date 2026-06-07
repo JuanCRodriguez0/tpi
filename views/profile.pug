@@ -46,6 +46,9 @@ block content
                 .d-flex.flex-column.gap-2
                     h4.mb-0 #{user.name} #{user.lastName}
                     span.text-muted @#{user.userName}
+                    if user.description
+                        p.mb-0 #{user.description}
+                        
                     if user.idUser === currentUser.id
                         a.btn.btn-outline-dark.btn-sm.mt-2.mx-auto(href="#", data-bs-toggle="modal", data-bs-target="#modalEditarPerfil" style="width: 280px") 
                             | Editar perfil
@@ -58,8 +61,6 @@ block content
                             button.btn.btn-outline-dark.btn-sm(type="submit" style="width: 280px")
                                 | Seguir
 
-                    if user.description
-                        p.mb-0 #{user.description}
                     .d-flex.gap-4.mt-2
                         div.d-flex.align-items-center
                             strong #{publications.length}
