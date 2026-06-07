@@ -47,7 +47,7 @@ block content
                     h4.mb-0 #{user.name} #{user.lastName}
                     span.text-muted @#{user.userName}
                     if user.idUser === currentUser.id
-                        a.btn.btn-outline-dark.btn-sm.mt-2.mx-auto(href="/profile/edit" style="width: 280px") 
+                        a.btn.btn-outline-dark.btn-sm.mt-2.mx-auto(href="#", data-bs-toggle="modal", data-bs-target="#modalEditarPerfil" style="width: 280px") 
                             | Editar perfil
                     else if isFollowing
                         form.mx-auto.mt-2(action=`/profile/unfollow/${user.idUser}` method="POST")
@@ -209,3 +209,66 @@ block content
                                         small.text-muted #{f.name} #{f.lastName}
                     else
                         p.text-muted No seguís a nadie aún.
+
+    #modalEditarPerfil.modal.fade(tabindex="-1")
+        .modal-dialog
+            .modal-content
+                .modal-header
+                    h5.modal-title Editar Perfil
+                    button.btn-close(type="button" data-bs-dismiss="modal")
+                .modal-body
+                    form(action="/profile/edit" method="POST")
+                        .d-flex.justify-content-center.mb-3
+                            if user.profilePhoto
+                                img#preview-foto.rounded-circle(
+                                    src=`data:image/jpeg;base64,${user.profilePhoto.toString('base64')}`
+                                    style="width: 100px; height: 100px; object-fit: cover;"
+                                )
+                            else
+                                .rounded-circle.bg-secondary.d-flex.align-items-center.justify-content-center#preview-placeholder(
+                                    style="width: 100px; height: 100px;"
+                                )
+                                    span.text-white.fs-1 #{user.userName[0].toUpperCase()}
+
+                        .d-flex.justify-content-center.mb-4
+                            label.btn.btn-outline-secondary.btn-sm(for="inputFotoPerfil") Modificar foto de perfil
+                            input#inputFotoPerfil(type="file" accept="image/*" style="display:none;")
+                            input#fotoBase64(type="hidden" name="profilePhoto")
+
+                        .mb-3
+                            label.form-label Nombre
+                            input.form-control.border-secondary(type="text" name="name" value= user.name)
+
+                        .mb-3
+                            label.form-label Apellido
+                            input.form-control.border-secondary(type="text" name="lastName" value= user.lastName)
+
+                        .mb-3
+                            label.form-label Descripción
+                            input.form-control.border-secondary(type="text" name="description" value= user.description || "")
+
+                        .d-flex.justify-content-end.gap-2.mt-3
+                            button.btn.btn-secondary(type="button" data-bs-dismiss="modal") Cancelar
+                            button.btn.btn-primary(type="submit") Guardar cambios
+
+    script.
+        document.getElementById('inputFotoPerfil').addEventListener('change', function(e) {
+            const file = e.target.files[0];
+                if (!file) return;
+                    const reader = new FileReader();
+                    reader.onload = function(ev) {
+                        const base64 = ev.target.result.split(',')[1];
+                        document.getElementById('fotoBase64').value = base64;
+                        let preview = document.getElementById('preview-foto');
+                        let placeholder = document.getElementById('preview-placeholder');
+                        if (!preview) {
+                            preview = document.createElement('img');
+                            preview.id = 'preview-foto';
+                            preview.className = 'rounded-circle';
+                            preview.style.cssText = 'width:100px;height:100px;object-fit:cover;';
+                            if (placeholder) placeholder.replaceWith(preview);
+                        }
+                    preview.src = ev.target.result;
+                    };
+                reader.readAsDataURL(file);
+        });

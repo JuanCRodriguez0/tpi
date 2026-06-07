@@ -172,3 +172,28 @@ export const unfollowUser = async (req, res) => {
         res.status(500).send("Error interno del servidor");
     }
 };
+
+export const editProfile = async (req, res) => {
+    if (!req.session.user) return res.redirect('/');
+
+    try {
+        const userId = req.session.user.id;
+        const { name, lastName, description, profilePhoto } = req.body;
+
+        const updateData = { name, lastName, description };
+
+        if (profilePhoto) {
+            updateData.profilePhoto = Buffer.from(profilePhoto, 'base64');
+        }
+
+        await User.update(updateData, { where: { idUser: userId } });
+
+        req.session.user.name = name;
+        req.session.user.lastName = lastName;
+
+        res.redirect('/profile');
+    } catch (error) {
+        console.error("Error al editar perfil:", error);
+        res.status(500).send("Error interno");
+    }
+};
