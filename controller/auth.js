@@ -93,6 +93,17 @@ export async function register(req, res) {
         return
     }
 
+    if (pass1.length < 6) {
+        res.status(400).render('auth/register', {
+            alert: {
+                status: "Error",
+                text: "La contraseña debe tener al menos 6 caracteres."
+            },
+            formValues: req.body
+        });
+        return;
+    }
+
     if (pass1 !== pass2) {
         res.status(400).render('auth/register', {
             alert: {

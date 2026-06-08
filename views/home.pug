@@ -17,6 +17,8 @@ block content
                 li.nav-item
                     a.btn.btn-outline-light.bg-primary(href="/post/create") + Nueva Publicación
 
+            h3.flex-grow-1.text-center Bienvenido #{currentUser.userName}
+
         .position-relative.me-3
             input#searchInput.form-control(type="search" placeholder="Buscar usuario o #tag" autocomplete="off" style="width:250px;")
             #searchDropdown.position-absolute.bg-white.border.rounded.shadow(style="display:none; z-index:1000; width:100%; top:100%;")
@@ -28,7 +30,7 @@ block content
         .row.justify-content-center
             if publications && publications.length > 0
                 each pub in publications
-                    .col-12
+                    .col-10
                         .card.mb-4
                             - const carouselId = `carousel-${pub.idPublication}`
                             .card-header.d-flex.justify-content-between.align-items-center
