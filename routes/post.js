@@ -11,4 +11,5 @@ router.get('/post/openComments/:idPublication', openComments);
 
 router.get('/post/delete/:idPublication', deletePublication);
 
+
 export default router;

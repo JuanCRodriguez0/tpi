@@ -4,12 +4,11 @@ import Follower from "../models/Follower.js";
 import Image from "../models/Image.js";
 import Ratingg from "../models/Ratingg.js";
 import Tag from '../models/Tag.js';
+import { Op } from "sequelize";
+import sequelize from '../db/config.js';
 
 
 export async function home(req, res) {
-    if (!req.session.user) {
-        return res.redirect('/');
-    }
 
     const userId = req.session.user.id;
 
@@ -43,7 +42,7 @@ export async function home(req, res) {
             },
             {
                 model: Tag,
-                model: Tag, attributes: ['idTag', 'name']
+                attributes: ['idTag', 'name']
             }
         ],
         order: [
@@ -79,8 +78,69 @@ export async function home(req, res) {
     res.render('home', {
         publications,
         ratings,
-        ratingsStats,
-        currentUser: req.session.user
+        ratingsStats
     });
 
+}
+
+export async function searchResults(req, res) {
+
+    const search = req.query.search?.trim();
+    const type = req.query.type;
+
+    if (!search) return res.redirect('/home');
+
+    let publications = [];
+    let users = [];
+
+    if (type === 'tag') {
+        publications = await Publication.findAll({
+            include: [
+                { model: User, attributes: ['idUser', 'userName', 'profilePhoto'] },
+                { model: Image, attributes: ['idImage', 'image', 'copyright'] },
+                { model: Tag, attributes: ['idTag', 'name'], where: { name: search.toLowerCase() } }
+            ],
+            order: [['createdAt', 'DESC']]
+        });
+    } else {
+        users = await User.findAll({
+            where: { userName: { [Op.like]: `%${search}%` } },
+            attributes: ['idUser', 'userName', 'name', 'lastName', 'profilePhoto']
+        });
+    }
+
+    res.render('search', { 
+        publications, 
+        users, 
+        search
+    });
+}
+
+export async function searchUsers(req, res) {
+    const search = req.query.search?.trim();
+    if (!search) return res.json([]);
+
+    const users = await User.findAll({
+        where: sequelize.where(
+            sequelize.fn('LOWER', sequelize.col('userName')),
+            { [Op.like]: `%${search.toLowerCase()}%` }
+        ),
+        attributes: ['idUser', 'userName', 'name', 'lastName'],
+        limit: 5
+    });
+
+    res.json(users);
+}
+
+export async function searchTags(req, res) {
+    const search = req.query.search?.trim();
+    if (!search) return res.json([]);
+
+    const tags = await Tag.findAll({
+        where: { name: { [Op.like]: `%${search}%` } },
+        attributes: ['idTag', 'name'],
+        limit: 5
+    });
+
+    res.json(tags);
 }

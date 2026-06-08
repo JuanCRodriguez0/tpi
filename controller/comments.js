@@ -4,7 +4,6 @@ import Publication from "../models/Publication.js";
 import Image from "../models/Image.js";
 
 export async function commentsView(req, res) {
-    if (!req.session.user) return res.redirect('/');
     
     const { idPublication } = req.params;
 
@@ -22,8 +21,7 @@ export async function commentsView(req, res) {
         comments, 
         publicationId: idPublication,
         pub: publication,
-        publicationAuthorId: publication.idUser,
-        currentUser: req.session.user
+        publicationAuthorId: publication.idUser
     });
 }
 

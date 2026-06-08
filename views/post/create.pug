@@ -47,7 +47,7 @@ block content
 
           .d-flex.justify-content-center.gap-3.mt-3
             button.btn.btn-dark(type="submit") Publicar
-            a.button.btn.btn-dark(href="/home") Cancelar
+            a.btn.btn-dark(href="/home") Cancelar
 
 block scripts
     script.
@@ -89,8 +89,3 @@ block scripts
                 reader.readAsDataURL(archivo)
             })
         })
-
-    script.
-        document.querySelector('form').addEventListener('submit', function() {
-            document.getElementById('etiquetasHidden').value = document.getElementById('inputEtiqueta').value;
-        });

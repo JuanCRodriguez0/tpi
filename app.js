@@ -9,6 +9,7 @@ import postRoutes from './routes/post.js'
 import commentRoutes from './routes/comments.js';
 import ratingRoutes from './routes/rating.js';
 import profileRoutes from './routes/profile.js';
+import { authMiddleware } from './middleware/auth.js';
 
 
 
@@ -32,25 +33,29 @@ app.use(session({
         sameSite: 'lax',
     },
 }));
-app.use(express.static('public'));
 
 // MOTOR DE PLANTILLAS
 app.set('view engine', 'pug');
 app.set('views', './views');
 
-// RUTAS
 
-app.use('/', homeRoutes);
-
-app.use('/', postRoutes);
-
+// RUTAS PUBLICAS
 app.use('/', authRoutes);
 
-app.use('/', commentRoutes);
 
-app.use('/', ratingRoutes);
+// RUTAS
 
-app.use('/', profileRoutes);
+app.use('/', authMiddleware, homeRoutes);
+
+app.use('/', authMiddleware, postRoutes);
+
+app.use('/', authMiddleware, authRoutes);
+
+app.use('/', authMiddleware, commentRoutes);
+
+app.use('/', authMiddleware, ratingRoutes);
+
+app.use('/', authMiddleware, profileRoutes);
 
 
 // SERVIDOR

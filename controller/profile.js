@@ -6,7 +6,6 @@ import Ratingg from "../models/Ratingg.js";
 import Tag from '../models/Tag.js';
 
 export async function myProfile(req, res) {
-    if (!req.session.user) return res.redirect('/');
 
     try {
         const userId = req.session.user.id;
@@ -51,7 +50,6 @@ export async function myProfile(req, res) {
 
         res.render('profile', {
             user,
-            currentUser: req.session.user,
             isFollowing: false,
             followers,
             following,
@@ -67,9 +65,6 @@ export async function myProfile(req, res) {
 }
 
 export async function otherProfile(req, res) {
-    if (!req.session.user) {
-        return res.redirect('/');
-    }
 
     try {
         const userId = req.params.idUser;
@@ -127,7 +122,6 @@ export async function otherProfile(req, res) {
 
         res.render('profile', {
             user,
-            currentUser: req.session.user,
             isFollowing,
             followers,
             following,
@@ -183,7 +177,6 @@ export const unfollowUser = async (req, res) => {
 };
 
 export const editProfile = async (req, res) => {
-    if (!req.session.user) return res.redirect('/');
 
     try {
         const userId = req.session.user.id;

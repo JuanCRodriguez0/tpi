@@ -20,42 +20,27 @@ block content
         .position-relative.me-3
             input#searchInput.form-control(type="search" placeholder="Buscar usuario o #tag" autocomplete="off" style="width:250px;")
             #searchDropdown.position-absolute.bg-white.border.rounded.shadow(style="display:none; z-index:1000; width:100%; top:100%;")
-        
+
         form(action="/logout" method="POST")
             button.btn.btn-danger.me-3(type="submit") Cerrar sesión
 
     .container.mt-4
-        .row.justify-content-center.align-items-stretch
-            if publications && publications.length > 0
+        h5.mb-3 Publicaciones con ##{search}
+
+        if publications && publications.length > 0
+            .row.justify-content-center.align-items-stretch
                 each pub in publications
-                    .col-12.col-md-6.col-lg-4 
+                    .col-12.col-md-6.col-lg-4
                         .card.mb-4(style="height: 550px; overflow: hidden;")
                             - const carouselId = `carousel-${pub.idPublication}`
                             .card-header.d-flex.justify-content-between.align-items-center
+                                a.text-dark.text-decoration-none(href=`/profile/${pub.User.idUser}`)
                                     h3 #{pub.User.userName}
-                                    .dropdown
-                                        a.btn.btn-link.text-dark.text-decoration-none.px-2.py-1.fs-5(type="button" data-bs-toggle="dropdown" )
-                                            |•••
-                                        ul.dropdown-menu.dropdown-menu-end
-                                            if pub.idUser === currentUser.id
-                                                li
-                                                    if pub.commentsOpen
-                                                        a.dropdown-item(href=`/post/closeComments/${pub.idPublication}`) Cerrar comentarios
-                                                    else
-                                                        a.dropdown-item(href=`/post/openComments/${pub.idPublication}`) Abrir comentarios
-                                                li
-                                                    a.dropdown-item(href=`/post/edit/${pub.idPublication}`) Editar publicación
-                                                li
-                                                    a.dropdown-item.text-danger(href=`/post/delete/${pub.idPublication}`) Eliminar
-                                            else
-                                                li
-                                                    a.dropdown-item.text-danger(href=`/post/report/${pub.idPublication}`) Denunciar
-                                            
+
                             .card-body.d-flex.flex-column
                                 h5.card-title #{pub.title}
                                 if pub.description
                                     p.card-text #{pub.description}
-
                                 if pub.Tags && pub.Tags.length > 0
                                     .d-flex.flex-wrap.gap-1.mb-2
                                         each tag in pub.Tags
@@ -66,7 +51,6 @@ block content
                                         src=`data:image/jpeg;base64,${pub.Images[0].image.toString('base64')}`
                                         style="max-height: 250px; object-fit: contain;"
                                     )
-
                                 else if pub.Images.length > 1
                                     div(id=carouselId).carousel.slide
                                         .carousel-indicators
@@ -88,32 +72,13 @@ block content
                                             span.carousel-control-prev-icon
                                         button.carousel-control-next(type="button" data-bs-target=`#${carouselId}` data-bs-slide="next")
                                             span.carousel-control-next-icon
-                                .card-body.d-flex.flex-column           
-                                    .d-flex.gap-2.mt-3.justify-content-center.align-items-stretch
-                                        a.btn.btn-outline-dark.d-flex.align-items-center(href=`/comments/${pub.idPublication}`) Ver comentarios
-                                        form(action=`/rating/${pub.idPublication}` method="POST")
-                                            input(type="hidden" name="idImage" value=`${pub.Images[0].idImage}`)
-                                            .d-flex.gap-1
-                                                each score in [1,2,3,4,5]
-                                                    button.btn.btn-outline-dark.btn-sm(type="submit" name="score" value=`${score}`) #{score}
-                                            if ratings[pub.idPublication]
-                                                small.text-muted Calificaste con #{ratings[pub.idPublication]}
-                                            else
-                                                small.text-muted Sin calificar
-
-                                    if ratingsStats[pub.idPublication].avg
-                                        small.text-muted ⭐ (#{ratingsStats[pub.idPublication].avg}) #{ratingsStats[pub.idPublication].total} #{ratingsStats[pub.idPublication].total === 1 ? 'voto' : 'votos'}
-                                    else
-                                        small.text-muted Sin votos aún
-
-                            
 
                             .card-footer.text-muted
                                 small #{new Date(pub.createdAt).toLocaleDateString('es-AR')} - #{new Date(pub.createdAt).toLocaleTimeString('es-AR', { hour: '2-digit', minute: '2-digit' })}
-            else
-                .text-center.mt-5
-                    p No hay publicaciones para mostrar.
 
+        else
+            .text-center.mt-5
+                p No hay publicaciones con el tag ##{search}
 
 block scripts
     script.
@@ -174,4 +139,4 @@ block scripts
             if (!input.contains(e.target) && !dropdown.contains(e.target)) {
                 dropdown.style.display = 'none';
             }
-        });            
+        });

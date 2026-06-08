@@ -3,7 +3,7 @@ extends layout.pug
 block content 
     nav.navbar.navbar-expand-lg.bg-primary.container-fluid
 
-        a.navbar-brand(href="/home") Fotaza
+        a.navbar-brand.ms-3(href="/home") Fotaza
             button.navbar-toggler(type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation")
                 span.navbar-toggler-icon
 
@@ -16,12 +16,12 @@ block content
                 li.nav-item
                     a.btn.btn-outline-light.bg-primary(href="/post/create") + Nueva Publicación
 
-
-        form.d-flex.me-3(role="search")
-            input.form-control.me-3(type="search" placeholder="Buscar" aria-label="Buscar")
-
+        .position-relative.me-3
+            input#searchInput.form-control(type="search" placeholder="Buscar usuario o #tag" autocomplete="off" style="width:250px;")
+            #searchDropdown.position-absolute.bg-white.border.rounded.shadow(style="display:none; z-index:1000; width:100%; top:100%;")
+        
         form(action="/logout" method="POST")
-            button.btn.text-danger.me-3(type="submit") Cerrar sesión
+            button.btn.btn-danger.me-3(type="submit") Cerrar sesión
 
     .container.d-flex.justify-content-center.mt-5
 
@@ -86,4 +86,63 @@ block content
                         button.btn.btn-primary.w-100(type="submit" disabled=pub && !pub.commentsOpen) Comentar
                                     
             
-            
+block scripts
+    script.
+        const input = document.getElementById('searchInput');
+        const dropdown = document.getElementById('searchDropdown');
+
+        input.addEventListener('input', async function() {
+            const q = this.value.trim();
+            dropdown.innerHTML = '';
+
+            if (!q) {
+                dropdown.style.display = 'none';
+                return;
+            }
+
+            if (q.startsWith('#')) {
+                const tagQuery = q.slice(1);
+                if (!tagQuery) return;
+
+                const res = await fetch(`/search/tags?search=${encodeURIComponent(tagQuery)}`);
+                const tags = await res.json();
+
+                if (tags.length === 0) { dropdown.style.display = 'none'; return; }
+
+                tags.forEach(tag => {
+                    const item = document.createElement('a');
+                    item.href = `/search?type=tag&search=${encodeURIComponent(tag.name)}`;
+                    item.className = 'd-block px-3 py-2 text-dark text-decoration-none border-bottom';
+                    item.textContent = `#${tag.name}`;
+                    item.addEventListener('mouseenter', () => item.style.background = '#f0f0f0');
+                    item.addEventListener('mouseleave', () => item.style.background = '');
+                    dropdown.appendChild(item);
+                });
+
+                dropdown.style.display = 'block';
+
+            } else {
+                const res = await fetch(`/search/users?search=${encodeURIComponent(q)}`);
+                const users = await res.json();
+
+                if (users.length === 0) { dropdown.style.display = 'none'; return; }
+
+                users.forEach(user => {
+                    const item = document.createElement('a');
+                    item.href = `/profile/${user.idUser}`;
+                    item.className = 'd-block px-3 py-2 text-dark text-decoration-none border-bottom';
+                    item.textContent = `@${user.userName} — ${user.name} ${user.lastName}`;
+                    item.addEventListener('mouseenter', () => item.style.background = '#f0f0f0');
+                    item.addEventListener('mouseleave', () => item.style.background = '');
+                    dropdown.appendChild(item);
+                });
+
+                dropdown.style.display = 'block';
+            }
+        });
+
+        document.addEventListener('click', function(e) {
+            if (!input.contains(e.target) && !dropdown.contains(e.target)) {
+                dropdown.style.display = 'none';
+            }
+        });            
