@@ -21,6 +21,7 @@ const PORT = process.env.PORT;
 
 
 // MIDDLEWARES
+app.use(express.static('public'));
 app.use(express.json({ limit: '10mb' }));
 app.use(express.urlencoded({ extended: true, limit: '10mb' }));
 app.use(session({
@@ -38,6 +39,7 @@ app.use(session({
 // MOTOR DE PLANTILLAS
 app.set('view engine', 'pug');
 app.set('views', './views');
+
 
 
 // RUTAS PUBLICAS
