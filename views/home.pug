@@ -29,7 +29,7 @@ block content
             if publications && publications.length > 0
                 each pub in publications
                     .col-12.col-md-6.col-lg-4 
-                        .card.mb-4(style="height: 550px; overflow: hidden;")
+                        .card.mb-4(style="height: 600px; overflow: hidden; display: flex; flex-direction: column;")
                             - const carouselId = `carousel-${pub.idPublication}`
                             .card-header.d-flex.justify-content-between.align-items-center
                                     h3 #{pub.User.userName}
@@ -51,7 +51,7 @@ block content
                                                 li
                                                     a.dropdown-item.text-danger(href=`/post/report/${pub.idPublication}`) Denunciar
                                             
-                            .card-body.d-flex.flex-column
+                            .card-body.d-flex.flex-column(style="flex: 1; overflow: hidden;")
                                 h5.card-title #{pub.title}
                                 if pub.description
                                     p.card-text #{pub.description}
@@ -64,11 +64,11 @@ block content
                                 if pub.Images.length === 1
                                     img.img-fluid.w-100(
                                         src=`data:image/jpeg;base64,${pub.Images[0].image.toString('base64')}`
-                                        style="max-height: 250px; object-fit: contain;"
+                                        style="height: 250px; object-fit: contain; flex-shrink: 0;"
                                     )
 
                                 else if pub.Images.length > 1
-                                    div(id=carouselId).carousel.slide
+                                    div(id=carouselId).carousel.slide(style="height: 250px; flex-shrink: 0;")
                                         .carousel-indicators
                                             each img, index in pub.Images
                                                 button(
@@ -126,7 +126,7 @@ block content
 
                             
 
-                            .card-footer.text-muted
+                            .card-footer.text-muted(style="flex-shrink: 0;")
                                 small #{new Date(pub.createdAt).toLocaleDateString('es-AR')} - #{new Date(pub.createdAt).toLocaleTimeString('es-AR', { hour: '2-digit', minute: '2-digit' })}
             else
                 .text-center.mt-5
