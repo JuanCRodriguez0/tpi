@@ -68,7 +68,7 @@ block content
                                     .d-flex.justify-content-between
                                         small(style="font-size: 1rem;") #{comment.User.userName}
                                         small.text-muted(style="font-size: 0.7rem;") #{new Date(comment.createdAt).toLocaleDateString('es-AR')} #{new Date(comment.createdAt).toLocaleTimeString('es-AR', { hour: '2-digit', minute: '2-digit' })}
-                                        if comment.idUser === currentUser.id || publicationAuthorId === currentUser.id
+                                        if comment.idUser === currentUser.idUser || publicationAuthorId === currentUser.idUser
                                             a.text-danger(style="font-size: 0.7rem;" href=`/comments/delete/${comment.idComment}`) Eliminar
                                     small.mb-0(style="font-size: 1.2rem;") #{comment.content}
                                     hr

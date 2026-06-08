@@ -22,6 +22,7 @@ block content
             input.form-control.border-secondary(type="file" name="images" id="imagenes" multiple)
             #preview.d-flex.flex-wrap.gap-2.mt-2
             #imagenesContainer
+            #copyrightContainer
 
           .mb-3 
             label.form-label.mb-0.fs-4 Etiquetas
@@ -34,58 +35,65 @@ block content
             .d-flex.flex-wrap.gap-2.mt-2
               input(type="hidden" name="etiquetas" id="etiquetasHidden")
 
-          .mb-3
-              label.form-label.fs-4 ¿Su imagen tiene Copyright?
-              select.form-select.border-secondary(name="copyright" id="copyright" required)
-                  option(value="" disabled selected) Seleccionar
-                  option(value="false") Sin Copyright
-                  option(value="true") Con Copyright
-
-          #marcaAguaContainer.mb-3(style="display:none;")
-              label.form-label.fs-4 Texto de marca de agua
-              input.form-control.border-secondary(type="text" name="watermark" placeholder="Ej: © Juan Cruz 2025")
-
           .d-flex.justify-content-center.gap-3.mt-3
             button.btn.btn-dark(type="submit") Publicar
             a.btn.btn-dark(href="/home") Cancelar
 
 block scripts
     script.
-        document.getElementById('copyright').addEventListener('change', function() {
-            const container = document.getElementById('marcaAguaContainer')
-            container.style.display = this.value === 'true' ? 'block' : 'none'
-        })
-
         document.querySelector('form').addEventListener('keydown', (e) => {
             if (e.key === 'Enter' && e.target.type !== 'submit') {
                 e.preventDefault()
             }
         })
 
-    script.
         document.getElementById('imagenes').addEventListener('change', (e) => {
             const archivos = Array.from(e.target.files)
-            const preview = document.getElementById('preview')
             const container = document.getElementById('imagenesContainer')
-            
-            preview.innerHTML = ''
-            container.innerHTML = ''
+            const copyrightContainer = document.getElementById('copyrightContainer')
 
-            archivos.forEach((archivo) => {
+            container.innerHTML = ''
+            copyrightContainer.innerHTML = ''
+
+            archivos.forEach((archivo, index) => {
                 const reader = new FileReader()
                 reader.onload = (event) => {
                     const base64 = event.target.result
+
                     const input = document.createElement('input')
                     input.type = 'hidden'
                     input.name = 'imagenesBase64'
                     input.value = base64
                     container.appendChild(input)
 
-                    const img = document.createElement('img')
-                    img.src = base64
-                    img.style.cssText = 'width:80px; height:80px; object-fit:cover; border-radius:8px;'
-                    preview.appendChild(img)
+                    const section = document.createElement('div')
+                    section.className = 'mb-4 border rounded p-3'
+                    section.innerHTML = `
+                        <p class="fw-bold mb-2">¿Su imagen tiene Copyright?</p>
+                        <div class="d-flex justify-content-center mb-3">
+                            <img src="${base64}" style="max-height: 200px; max-width: 100%; object-fit: contain; border-radius: 8px;">
+                        </div>
+                        <select class="form-select border-secondary mb-2" name="copyright" data-index="${index}">
+                            <option value="" disabled selected>Seleccionar</option>
+                            <option value="false">Sin Copyright</option>
+                            <option value="true">Con Copyright</option>
+                        </select>
+                        <div id="marcaAgua-${index}" style="display:none;">
+                            <label class="form-label">Texto de marca de agua</label>
+                            <input class="form-control border-secondary" type="text" name="watermark" placeholder="Ej: © Juan Cruz 2025">
+                        </div>
+                    `
+                    copyrightContainer.appendChild(section)
+
+                    section.querySelector('select').addEventListener('change', function() {
+                        document.getElementById(`marcaAgua-${index}`).style.display = 
+                            this.value === 'true' ? 'block' : 'none'
+                    })
                 }
                 reader.readAsDataURL(archivo)
             })
         })
+
+        document.querySelector('form').addEventListener('submit', function() {
+            document.getElementById('etiquetasHidden').value = document.getElementById('inputEtiqueta').value;
+        });

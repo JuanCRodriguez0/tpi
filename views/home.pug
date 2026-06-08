@@ -68,7 +68,7 @@ block content
                                     )
 
                                 else if pub.Images.length > 1
-                                    div(id=carouselId).carousel.slide(style="height: 250px; flex-shrink: 0;")
+                                    div.carousel.slide(id=carouselId style="height: 250px; flex-shrink: 0;")
                                         .carousel-indicators
                                             each img, index in pub.Images
                                                 button(
@@ -88,19 +88,19 @@ block content
                                             span.carousel-control-prev-icon
                                         button.carousel-control-next(type="button" data-bs-target=`#${carouselId}` data-bs-slide="next")
                                             span.carousel-control-next-icon
-                                .card-body.d-flex.flex-column           
-                                    .d-flex.gap-2.mt-3.justify-content-center.align-items-stretch
+                                .mt-auto
+                                    .d-flex.gap-2.mt-3.justify-content-center.align-items-center
                                         a.btn.btn-outline-dark.d-flex.align-items-center(href=`/comments/${pub.idPublication}`) Ver comentarios
-                                        form(action=`/rating/${pub.idPublication}` method="POST")
-                                            input(type="hidden" name="idImage" value=`${pub.Images[0].idImage}`)
-                                            .d-flex.gap-1
-                                                each score in [1,2,3,4,5]
-                                                    button.btn.btn-outline-dark.btn-sm(type="submit" name="score" value=`${score}`) #{score}
-                                            if ratings[pub.idPublication]
-                                                small.text-muted Calificaste con #{ratings[pub.idPublication]}
-                                            else
-                                                small.text-muted Sin calificar
-
+                                        if pub.idUser !== currentUser.idUser
+                                            form(action=`/rating/${pub.idPublication}` method="POST")
+                                                input(type="hidden" name="idImage" value=`${pub.Images[0].idImage}`)
+                                                .d-flex.gap-1
+                                                    each score in [1,2,3,4,5]
+                                                        button.btn.btn-outline-dark.btn-sm(type="submit" name="score" value=`${score}`) #{score}
+                                                if ratings[pub.idPublication]
+                                                    small.text-muted Calificaste con #{ratings[pub.idPublication]}
+                                                else
+                                                    small.text-muted Sin calificar
                                     if ratingsStats[pub.idPublication].avg
                                         small.text-muted ⭐ (#{ratingsStats[pub.idPublication].avg}) #{ratingsStats[pub.idPublication].total} #{ratingsStats[pub.idPublication].total === 1 ? 'voto' : 'votos'}
                                     else
@@ -136,4 +136,4 @@ block content
 
 
 block scripts
-    script(src="/search.js")            
+    script(src="/search.js")    

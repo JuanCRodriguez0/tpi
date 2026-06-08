@@ -9,10 +9,9 @@ export async function createForm(req, res) {
 }
 
 export async function create(req, res) {
-
-    const { title, description, imagenesBase64, copyright, watermark, etiquetas } = req.body;
+    const { title, description, etiquetas } = req.body;
     const userId = req.session.user.id;
-
+    let imagenes = req.body.imagenesBase64;
 
     if (!title) {
         return res.render('post/create', {
@@ -28,16 +27,14 @@ export async function create(req, res) {
         });
     }
 
-    if (!copyright || copyright === '') {
+    if (!req.body.copyright || req.body.copyright === '') {
         return res.render('post/create', {
             alert: { status: "Error", text: "Debe seleccionar una opción de copyright" },
             formValues: req.body
         });
     }
 
-    if (!Array.isArray(imagenes)) {
-        imagenes = [imagenes];
-    }
+    if (!Array.isArray(imagenes)) imagenes = [imagenes];
 
     try {
         const publication = await Publication.create({
@@ -46,11 +43,20 @@ export async function create(req, res) {
             idUser: userId,
         });
 
-        for (const base64 of imagenes) {
+        let copyrights = req.body.copyright;
+        let watermarks = req.body.watermark;
+        if (!Array.isArray(copyrights)) copyrights = [copyrights];
+        if (!Array.isArray(watermarks)) watermarks = watermarks ? [watermarks] : [];
+
+        for (let i = 0; i < imagenes.length; i++) {
+            const base64 = imagenes[i];
             const base64Data = base64.split(",")[1] || base64;
             let imageBuffer = Buffer.from(base64Data, "base64");
 
-            if (copyright === 'true' && watermark) {
+            const imgCopyright = copyrights[i] === 'true';
+            const imgWatermark = watermarks[i] || null;
+
+            if (imgCopyright && imgWatermark) {
                 const image = sharp(imageBuffer);
                 const metadata = await image.metadata();
 
@@ -67,15 +73,11 @@ export async function create(req, res) {
                             stroke="black"
                             stroke-width="2"
                             paint-order="stroke"
-                        >${watermark}</text>
+                        >${imgWatermark}</text>
                     </svg>`;
 
                 imageBuffer = await image
-                    .composite([{
-                        input: Buffer.from(svgText),
-                        top: 0,
-                        left: 0
-                    }])
+                    .composite([{ input: Buffer.from(svgText), top: 0, left: 0 }])
                     .jpeg()
                     .toBuffer();
             }
@@ -83,8 +85,8 @@ export async function create(req, res) {
             await Image.create({
                 idPublication: publication.idPublication,
                 image: imageBuffer,
-                copyright: copyright === 'true',
-                watermark: copyright === 'true' ? watermark : null,
+                copyright: imgCopyright,
+                watermark: imgWatermark,
             });
         }
 
@@ -110,6 +112,7 @@ export async function create(req, res) {
         });
     }
 }
+
 
 export async function closeComments(req, res) {
     const { idPublication } = req.params;
