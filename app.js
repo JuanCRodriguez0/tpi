@@ -10,6 +10,7 @@ import commentRoutes from './routes/comments.js';
 import ratingRoutes from './routes/rating.js';
 import profileRoutes from './routes/profile.js';
 import { authMiddleware } from './middleware/auth.js';
+import { guestHome } from './controller/home.js';
 
 
 
@@ -42,14 +43,13 @@ app.set('views', './views');
 // RUTAS PUBLICAS
 app.use('/', authRoutes);
 
+app.get('/guestHome', guestHome);
 
 // RUTAS
 
 app.use('/', authMiddleware, homeRoutes);
 
 app.use('/', authMiddleware, postRoutes);
-
-app.use('/', authMiddleware, authRoutes);
 
 app.use('/', authMiddleware, commentRoutes);
 

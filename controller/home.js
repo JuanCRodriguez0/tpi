@@ -144,3 +144,15 @@ export async function searchTags(req, res) {
 
     res.json(tags);
 }
+
+export async function guestHome(req, res) {
+    const publications = await Publication.findAll({
+        include: [
+            { model: User, attributes: ['userName'] },
+            { model: Image, attributes: ['idImage', 'image', 'copyright'], where: { copyright: false } }
+        ],
+        order: [['createdAt', 'DESC']]
+    });
+
+    res.render('guestHome', { publications });
+}

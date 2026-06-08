@@ -160,3 +160,24 @@ export async function deletePublication(req, res) {
         res.redirect('/home');
     }
 }
+
+export async function editPublication(req, res) {
+    const { idPublication } = req.params;
+    const { title, description } = req.body;
+    const userId = req.session.user.id;
+
+    try {
+        const publication = await Publication.findByPk(idPublication);
+
+        if (!publication || publication.idUser !== userId) {
+            return res.redirect('/home');
+        }
+
+        await publication.update({ title, description });
+
+        res.redirect('/home');
+    } catch (error) {
+        console.error('[!] Error al editar publicación:', error);
+        res.redirect('/home');
+    }
+}

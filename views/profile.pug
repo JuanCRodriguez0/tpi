@@ -82,14 +82,14 @@ block content
                                     button.btn.btn-link.text-dark.text-decoration-none.px-2.py-1.fs-3(type="button" data-bs-toggle="dropdown")
                                         | •••
                                     ul.dropdown-menu.dropdown-menu-end
-                                        if pub.idUser === currentUser.id
+                                        if pub.idUser === currentUser.idUser
                                             li
                                                 if pub.commentsOpen
                                                     a.dropdown-item(href=`/post/closeComments/${pub.idPublication}`) Cerrar comentarios
                                                 else
                                                     a.dropdown-item(href=`/post/openComments/${pub.idPublication}`) Abrir comentarios
                                             li
-                                                a.dropdown-item(href=`/post/edit/${pub.idPublication}`) Editar publicación
+                                                    a.dropdown-item(href="#" data-bs-toggle="modal" data-bs-target=`#modalEditar-${pub.idPublication}`) Editar publicación
                                             li
                                                 a.dropdown-item.text-danger(href=`/post/delete/${pub.idPublication}`) Eliminar
                                         else
@@ -149,6 +149,24 @@ block content
                                         small.text-muted ⭐ (#{ratingsStats[pub.idPublication].avg}) #{ratingsStats[pub.idPublication].total} #{ratingsStats[pub.idPublication].total === 1 ? 'voto' : 'votos'}
                                     else
                                         small.text-muted Sin votos aún
+
+                                .modal.fade(id=`modalEditar-${pub.idPublication}` tabindex="-1")
+                                    .modal-dialog
+                                        .modal-content
+                                            .modal-header
+                                                h5.modal-title Editar publicación
+                                                button.btn-close(type="button" data-bs-dismiss="modal")
+                                            .modal-body
+                                                form(action=`/post/edit/${pub.idPublication}` method="POST")
+                                                    .mb-3
+                                                        label.form-label Título
+                                                        input.form-control(type="text" name="title" value=pub.title)
+                                                    .mb-3
+                                                        label.form-label Descripción
+                                                        input.form-control(type="text" name="description" value=pub.description || "")
+                                                    .d-flex.justify-content-end.gap-2.mt-3
+                                                        button.btn.btn-secondary(type="button" data-bs-dismiss="modal") Cancelar
+                                                        button.btn.btn-primary(type="submit") Guardar
 
                             .card-footer.text-muted
                                 small #{new Date(pub.createdAt).toLocaleDateString('es-AR')} - #{new Date(pub.createdAt).toLocaleTimeString('es-AR', { hour: '2-digit', minute: '2-digit' })}

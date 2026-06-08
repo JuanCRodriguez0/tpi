@@ -48,6 +48,30 @@ export async function myProfile(req, res) {
             order: [['createdAt', 'DESC']]
         });
 
+        const ratings = {};
+        const ratingsStats = {};
+
+        await Promise.all(
+            publications.map(async (pub) => {
+                const idImage = pub.Images[0]?.idImage;
+
+                const userRating = await Ratingg.findOne({
+                    where: { idUser: req.session.user.id, idImage }
+                });
+                ratings[pub.idPublication] = userRating ? Number(userRating.score) : null;
+
+                const allRatings = await Ratingg.findAll({
+                    where: { idImage }
+                });
+                const total = allRatings.length;
+                const avg = total > 0
+                    ? (allRatings.reduce((sum, r) => sum + r.score, 0) / total).toFixed(1)
+                    : null;
+
+                ratingsStats[pub.idPublication] = { avg, total };
+            })
+        );
+
         res.render('profile', {
             user,
             isFollowing: false,
@@ -55,7 +79,9 @@ export async function myProfile(req, res) {
             following,
             followersList: user.followers,
             followingList: user.following,
-            publications
+            publications,
+            ratings,
+            ratingsStats 
         });
 
     } catch (error) {
@@ -120,6 +146,30 @@ export async function otherProfile(req, res) {
 
         const isFollowing = followRecord !== null;
 
+        const ratings = {};
+        const ratingsStats = {};
+
+        await Promise.all(
+            publications.map(async (pub) => {
+                const idImage = pub.Images[0]?.idImage;
+
+                const userRating = await Ratingg.findOne({
+                    where: { idUser: req.session.user.id, idImage }
+                });
+                ratings[pub.idPublication] = userRating ? Number(userRating.score) : null;
+
+                const allRatings = await Ratingg.findAll({
+                    where: { idImage }
+                });
+                const total = allRatings.length;
+                const avg = total > 0
+                    ? (allRatings.reduce((sum, r) => sum + r.score, 0) / total).toFixed(1)
+                    : null;
+
+                ratingsStats[pub.idPublication] = { avg, total };
+            })
+        );
+
         res.render('profile', {
             user,
             isFollowing,
@@ -127,7 +177,9 @@ export async function otherProfile(req, res) {
             following,
             followersList: user.followers,
             followingList: user.following,
-            publications
+            publications,
+            ratings,
+            ratingsStats 
         });
 
     } catch (error) {
