@@ -135,7 +135,8 @@ block content
 
                                 .mt-auto
                                     .d-flex.gap-2.mt-3.justify-content-center.align-items-center
-                                        a.btn.btn-outline-dark.d-flex.align-items-center(href=`/comments/${pub.idPublication}`) Ver comentarios
+                                        a.btn.btn-outline-dark.d-flex.align-items-center(href=`/comments/${pub.idPublication}`) 
+                                            | Ver comentarios (#{pub.Comments ? pub.Comments.length : 0})
                                         if pub.idUser !== currentUser.idUser
                                             form(action=`/rating/${pub.idPublication}` method="POST")
                                                 input(type="hidden" name="idImage" value=`${pub.Images[0].idImage}`)

@@ -65,7 +65,7 @@ export async function create(req, res) {
                         <text 
                             x="${metadata.width - 20}" 
                             y="${metadata.height - 20}" 
-                            font-size="36" 
+                            font-size="200" 
                             fill="rgba(255,255,255,0.8)" 
                             text-anchor="end" 
                             dominant-baseline="auto"

@@ -6,6 +6,7 @@ import Ratingg from "../models/Ratingg.js";
 import Tag from '../models/Tag.js';
 import { Op } from "sequelize";
 import sequelize from '../db/config.js';
+import Comment from '../models/Comment.js';
 
 
 export async function home(req, res) {
@@ -28,26 +29,14 @@ export async function home(req, res) {
 
 
     const publications = await Publication.findAll({
-        where: {
-            idUser: followingIds
-        },
+        where: { idUser: followingIds },
         include: [
-            {
-                model: User,
-                attributes: ['userName', 'profilePhoto']
-            },
-            {
-                model: Image,
-                attributes: ['idImage', 'image', 'copyright']
-            },
-            {
-                model: Tag,
-                attributes: ['idTag', 'name']
-            }
+            { model: User, attributes: ['userName', 'profilePhoto'] },
+            { model: Image, attributes: ['idImage', 'image', 'copyright'] },
+            { model: Tag, attributes: ['idTag', 'name'] },
+            { model: Comment, attributes: ['idComment'] }
         ],
-        order: [
-            ['createdAt', 'DESC']
-        ]
+        order: [['createdAt', 'DESC']]
     });
 
 
@@ -109,9 +98,9 @@ export async function searchResults(req, res) {
         });
     }
 
-    res.render('search', { 
-        publications, 
-        users, 
+    res.render('search', {
+        publications,
+        users,
         search
     });
 }

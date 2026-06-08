@@ -4,6 +4,7 @@ import Follower from "../models/Follower.js";
 import Image from "../models/Image.js";
 import Ratingg from "../models/Ratingg.js";
 import Tag from '../models/Tag.js';
+import Comment from '../models/Comment.js';
 
 export async function myProfile(req, res) {
 
@@ -38,12 +39,11 @@ export async function myProfile(req, res) {
         });
 
         const publications = await Publication.findAll({
-            where: {
-                idUser: userId
-            },
+            where: { idUser: userId },
             include: [
                 { model: Image, attributes: ['idImage', 'image'] },
-                { model: Tag, attributes: ['idTag', 'name'] }
+                { model: Tag, attributes: ['idTag', 'name'] },
+                { model: Comment, attributes: ['idComment'] }
             ],
             order: [['createdAt', 'DESC']]
         });
@@ -81,7 +81,7 @@ export async function myProfile(req, res) {
             followingList: user.following,
             publications,
             ratings,
-            ratingsStats 
+            ratingsStats
         });
 
     } catch (error) {
@@ -130,15 +130,14 @@ export async function otherProfile(req, res) {
         });
 
         const publications = await Publication.findAll({
-            where: {
-                idUser: userId
-            },
-            include: [
-                { model: Image, attributes: ['idImage', 'image'] },
-                { model: Tag, attributes: ['idTag', 'name'] }
-            ],
-            order: [['createdAt', 'DESC']]
-        });
+    where: { idUser: userId },
+    include: [
+        { model: Image, attributes: ['idImage', 'image'] },
+        { model: Tag, attributes: ['idTag', 'name'] },
+        { model: Comment, attributes: ['idComment'] }
+    ],
+    order: [['createdAt', 'DESC']]
+});
 
         const followRecord = await Follower.findOne({
             where: { idFollower: loggedInUserId, idFollowed: Number(userId) }
@@ -179,7 +178,7 @@ export async function otherProfile(req, res) {
             followingList: user.following,
             publications,
             ratings,
-            ratingsStats 
+            ratingsStats
         });
 
     } catch (error) {
