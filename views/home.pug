@@ -25,14 +25,14 @@ block content
             button.btn.btn-danger.me-3(type="submit") Cerrar sesión
 
     .container.mt-4
-        .row.justify-content-center.align-items-stretch
+        .row.justify-content-center
             if publications && publications.length > 0
                 each pub in publications
-                    .col-12.col-md-6.col-lg-4 
-                        .card.mb-4(style="height: 600px; overflow: hidden; display: flex; flex-direction: column;")
+                    .col-12
+                        .card.mb-4
                             - const carouselId = `carousel-${pub.idPublication}`
                             .card-header.d-flex.justify-content-between.align-items-center
-                                    h3 #{pub.User.userName}
+                                    h2 #{pub.User.userName}
                                     .dropdown
                                         a.btn.btn-link.text-dark.text-decoration-none.px-2.py-1.fs-5(type="button" data-bs-toggle="dropdown" )
                                             |•••
@@ -51,8 +51,8 @@ block content
                                                 li
                                                     a.dropdown-item.text-danger(href=`/post/report/${pub.idPublication}`) Denunciar
                                             
-                            .card-body.d-flex.flex-column(style="flex: 1; overflow: hidden;")
-                                h5.card-title #{pub.title}
+                            .card-body.d-flex.flex-column
+                                h4.card-title #{pub.title}
                                 if pub.description
                                     p.card-text #{pub.description}
 
@@ -60,15 +60,14 @@ block content
                                     .d-flex.flex-wrap.gap-1.mb-2
                                         each tag in pub.Tags
                                             span.badge.bg-secondary ##{tag.name}
-
                                 if pub.Images.length === 1
                                     img.img-fluid.w-100(
                                         src=`data:image/jpeg;base64,${pub.Images[0].image.toString('base64')}`
-                                        style="height: 250px; object-fit: contain; flex-shrink: 0;"
+                                        style="max-height: 500px; object-fit: contain;"
                                     )
 
                                 else if pub.Images.length > 1
-                                    div.carousel.slide(id=carouselId style="height: 250px; flex-shrink: 0;")
+                                    div.carousel.slide(id=carouselId)
                                         .carousel-indicators
                                             each img, index in pub.Images
                                                 button(
@@ -82,7 +81,7 @@ block content
                                                 div(class=`carousel-item ${index === 0 ? 'active' : ''}`)
                                                     img.d-block.w-100(
                                                         src=`data:image/jpeg;base64,${img.image.toString('base64')}`
-                                                        style="max-height: 250px; object-fit: contain;"
+                                                        style="max-height: 500px; object-fit: contain;"
                                                     )
                                         button.carousel-control-prev(type="button" data-bs-target=`#${carouselId}` data-bs-slide="prev")
                                             span.carousel-control-prev-icon
@@ -103,9 +102,9 @@ block content
                                                 else
                                                     small.text-muted Sin calificar
                                     if ratingsStats[pub.idPublication].avg
-                                        small.text-muted ⭐ (#{ratingsStats[pub.idPublication].avg}) #{ratingsStats[pub.idPublication].total} #{ratingsStats[pub.idPublication].total === 1 ? 'voto' : 'votos'}
+                                        small.text-muted.d-flex.justify-content-center ⭐ (#{ratingsStats[pub.idPublication].avg}) #{ratingsStats[pub.idPublication].total} #{ratingsStats[pub.idPublication].total === 1 ? 'voto' : 'votos'}
                                     else
-                                        small.text-muted Sin votos aún
+                                        small.text-muted.d-flex.justify-content-center Sin votos aún
 
                                 .modal.fade(id=`modalEditar-${pub.idPublication}` tabindex="-1")
                                     .modal-dialog
