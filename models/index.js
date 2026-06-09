@@ -10,6 +10,7 @@ import PublicationTag from "./PublicationTag.js";
 import PublicationReport from "./PublicationReport.js";
 import Follower from "./Follower.js";
 import Message from "./Message.js";
+import PublicationInterest from "./PublicationInterest.js";
 
 
 // Users tiene 1 o muchas Publication
@@ -70,6 +71,17 @@ PublicationReport.belongsTo(Publication, {foreignKey: 'idPublication'});
 // Users hace PublicationReport
 User.hasMany(PublicationReport, {foreignKey: 'idUser'});
 PublicationReport.belongsTo(User, {foreignKey: 'idUser'});
+
+// Users tiene 0 o muchos interest
+User.belongsToMany(Publication, {
+    through: PublicationInterest,
+    foreignKey: "idUser"
+});
+
+Publication.belongsToMany(User, {
+    through: PublicationInterest,
+    foreignKey: "idPublication"
+});
 
 
 export async function connectDatabase(){

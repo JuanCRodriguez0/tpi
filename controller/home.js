@@ -7,6 +7,7 @@ import Tag from '../models/Tag.js';
 import { Op } from "sequelize";
 import sequelize from '../db/config.js';
 import Comment from '../models/Comment.js';
+import PublicationInterest from "../models/PublicationInterest.js";
 
 
 export async function home(req, res) {
@@ -39,6 +40,18 @@ export async function home(req, res) {
         order: [['createdAt', 'DESC']]
     });
 
+    const interests = await PublicationInterest.findAll({
+        where: {
+            idUser: userId
+        }
+    });
+
+    const interestedPublications = {};
+
+    interests.forEach(interest => {
+        interestedPublications[interest.idPublication] = true;
+    });
+
 
     const ratings = {};
     const ratingsStats = {};
@@ -67,7 +80,8 @@ export async function home(req, res) {
     res.render('home', {
         publications,
         ratings,
-        ratingsStats
+        ratingsStats,
+        interestedPublications
     });
 
 }

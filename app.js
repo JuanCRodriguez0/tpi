@@ -11,6 +11,7 @@ import ratingRoutes from './routes/rating.js';
 import profileRoutes from './routes/profile.js';
 import { authMiddleware } from './middleware/auth.js';
 import { guestHome } from './controller/home.js';
+import publicationInterestRoutes from './routes/publicationInterest.js';
 
 
 
@@ -58,6 +59,8 @@ app.use('/', authMiddleware, commentRoutes);
 app.use('/', authMiddleware, ratingRoutes);
 
 app.use('/', authMiddleware, profileRoutes);
+
+app.use('/', authMiddleware, publicationInterestRoutes);
 
 
 // SERVIDOR

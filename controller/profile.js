@@ -130,14 +130,14 @@ export async function otherProfile(req, res) {
         });
 
         const publications = await Publication.findAll({
-    where: { idUser: userId },
-    include: [
-        { model: Image, attributes: ['idImage', 'image'] },
-        { model: Tag, attributes: ['idTag', 'name'] },
-        { model: Comment, attributes: ['idComment'] }
-    ],
-    order: [['createdAt', 'DESC']]
-});
+            where: { idUser: userId },
+            include: [
+                { model: Image, attributes: ['idImage', 'image'] },
+                { model: Tag, attributes: ['idTag', 'name'] },
+                { model: Comment, attributes: ['idComment'] }
+            ],
+            order: [['createdAt', 'DESC']]
+        });
 
         const followRecord = await Follower.findOne({
             where: { idFollower: loggedInUserId, idFollowed: Number(userId) }
@@ -169,6 +169,19 @@ export async function otherProfile(req, res) {
             })
         );
 
+        const interests = await PublicationInterest.findAll({
+            where: {
+                idUser: currentUserId
+            }
+        });
+
+        const interestedPublications = {};
+
+        interests.forEach(i => {
+            interestedPublications[i.idPublication] = true;
+        });
+
+
         res.render('profile', {
             user,
             isFollowing,
@@ -178,7 +191,8 @@ export async function otherProfile(req, res) {
             followingList: user.following,
             publications,
             ratings,
-            ratingsStats
+            ratingsStats,
+            interestedPublications
         });
 
     } catch (error) {

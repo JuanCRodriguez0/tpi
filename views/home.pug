@@ -17,7 +17,7 @@ block content
                 li.nav-item
                     a.btn.btn-outline-light.bg-primary(href="/post/create") + Nueva Publicación
 
-            h3.flex-grow-1.text-center Bienvenido #{currentUser.userName}
+            h3.flex-grow-1.text-center Bienvenido, #{currentUser.userName}
 
         .position-relative.me-3
             input#searchInput.form-control(type="search" placeholder="Buscar usuario o #tag" autocomplete="off" style="width:250px;")
@@ -91,8 +91,18 @@ block content
                                             span.carousel-control-next-icon
                                 .mt-auto
                                     .d-flex.gap-2.mt-3.justify-content-center.align-items-center
+                                        if pub.idUser !== currentUser.idUser
+                                            if interestedPublications[pub.idPublication]
+                                                form(action=`/interest/remove/${pub.idPublication}` method="POST")
+                                                    button.btn.btn-dark(type="submit")
+                                                        | 💔 Ya no me interesa
+                                            else
+                                                form(action=`/interest/add/${pub.idPublication}` method="POST")
+                                                    button.btn.btn-outline-dark(type="submit")
+                                                        | ❤️ Me interesa
+
                                         a.btn.btn-outline-dark.d-flex.align-items-center(href=`/comments/${pub.idPublication}`) 
-                                            | Ver comentarios (#{pub.Comments ? pub.Comments.length : 0})
+                                            | 💬 Ver comentarios (#{pub.Comments ? pub.Comments.length : 0})
                                         if pub.idUser !== currentUser.idUser
                                             form(action=`/rating/${pub.idPublication}` method="POST")
                                                 input(type="hidden" name="idImage" value=`${pub.Images[0].idImage}`)

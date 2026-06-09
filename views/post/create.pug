@@ -11,11 +11,11 @@ block content
         form(action="/post/create" method="POST")
           .mb-3
             label.form-label.fs-4 Titulo
-            input.form-control.border-secondary(type="text" name="title" placeholder="Titulo")
+            input.form-control.border-secondary(type="text" name="title" placeholder="Titulo" value=formValues ? formValues.title : "")
 
           .mb-3
             label.form-label.fs-4 Descripción
-            input.form-control.border-secondary(type="text" name="description" placeholder="Descripción")
+            input.form-control.border-secondary(type="text" name="description" placeholder="Descripción" value=formValues ? formValues.description : "")
 
           .mb-3
             label.form-label.fs-4 Imágenes
@@ -27,11 +27,7 @@ block content
           .mb-3 
             label.form-label.mb-0.fs-4 Etiquetas
             label.text-muted.small Ingrese las etiquetas separadas con coma
-            input.form-control.border-secondary(
-              type="text" 
-              id="inputEtiqueta"
-              placeholder="Paisaje,montañas,arboles..."
-            )
+            input.form-control.border-secondary(type="text" id="inputEtiqueta" placeholder="Paisaje,montañas,arboles..." value=formValues ? formValues.etiquetas : "")
             .d-flex.flex-wrap.gap-2.mt-2
               input(type="hidden" name="etiquetas" id="etiquetasHidden")
 

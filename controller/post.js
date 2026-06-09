@@ -13,7 +13,7 @@ export async function create(req, res) {
     const userId = req.session.user.id;
     let imagenes = req.body.imagenesBase64;
 
-    if (!title) {
+    if (!title || title.trim() === '') {
         return res.render('post/create', {
             alert: { status: "Error", text: "El título es obligatorio" },
             formValues: req.body
@@ -27,9 +27,28 @@ export async function create(req, res) {
         });
     }
 
-    if (!req.body.copyright || req.body.copyright === '') {
+    if (!etiquetas || etiquetas.trim() === '') {
+    return res.render('post/create', {
+        alert: {
+            status: "Error",
+            text: "Debe ingresar al menos una etiqueta."
+        },
+        formValues: req.body
+    });
+}
+
+    let copyrights = req.body.copyright;
+
+    if (!Array.isArray(copyrights)) {
+        copyrights = [copyrights];
+    }
+
+    if (copyrights.some(c => !c || c.trim() === '')) {
         return res.render('post/create', {
-            alert: { status: "Error", text: "Debe seleccionar una opción de copyright" },
+            alert: {
+                status: "Error",
+                text: "Debe seleccionar copyright para todas las imágenes."
+            },
             formValues: req.body
         });
     }
