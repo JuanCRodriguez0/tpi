@@ -11,18 +11,18 @@ block content
         #navbarSupportedContent.collapse.navbar-collapse
             ul.navbar-nav.me-auto.mb-2.mb-lg-0.gap-3
                 li.nav-item
-                    a.nav-link.active(aria-current="page" href="/home") Inicio
+                    a.nav-link.active(aria-current="page" href="/home") 🏠 Inicio
                 li.nav-item
-                    a.nav-link.active(href="/profile") Perfil
+                    a.nav-link.active(href="/profile") 👤 Perfil
                 li.nav-item
-                    a.btn.btn-outline-light.bg-primary(href="/post/create") + Nueva Publicación
+                    a.btn.btn-outline-light.bg-primary(href="/post/create") 📷 Nueva Publicación
 
         .position-relative.me-3
             input#searchInput.form-control(type="search" placeholder="Buscar usuario o #tag" autocomplete="off" style="width:250px;")
             #searchDropdown.position-absolute.bg-white.border.rounded.shadow(style="display:none; z-index:1000; width:100%; top:100%;")
         
         form(action="/logout" method="POST")
-            button.btn.btn-danger.me-3(type="submit") Cerrar sesión
+            button.btn.btn-danger.me-3(type="submit") ➜] Cerrar sesión
 
     .container.mt-4 
         .card.mb-4.p-4
@@ -85,16 +85,16 @@ block content
                                         if pub.idUser === currentUser.idUser
                                             li
                                                 if pub.commentsOpen
-                                                    a.dropdown-item(href=`/post/closeComments/${pub.idPublication}`) Cerrar comentarios
+                                                    a.dropdown-item(href=`/post/closeComments/${pub.idPublication}`) ✉️ Cerrar comentarios
                                                 else
-                                                    a.dropdown-item(href=`/post/openComments/${pub.idPublication}`) Abrir comentarios
+                                                    a.dropdown-item(href=`/post/openComments/${pub.idPublication}`) 📩 Abrir comentarios
                                             li
-                                                    a.dropdown-item(href="#" data-bs-toggle="modal" data-bs-target=`#modalEditar-${pub.idPublication}`) Editar publicación
+                                                    a.dropdown-item(href="#" data-bs-toggle="modal" data-bs-target=`#modalEditar-${pub.idPublication}`) 📝 Editar publicación
                                             li
-                                                a.dropdown-item.text-danger(href=`/post/delete/${pub.idPublication}`) Eliminar
+                                                a.dropdown-item.text-danger(href=`/post/delete/${pub.idPublication}`) ❌ Eliminar
                                         else
                                             li
-                                                a.dropdown-item.text-danger(href=`/post/report/${pub.idPublication}`) Denunciar
+                                                a.dropdown-item.text-danger(href=`/post/report/${pub.idPublication}`) 🚩 Denunciar
 
                             .card-body.d-flex.flex-column(style="flex: 1; overflow: hidden;")
                                 h5.card-title #{pub.title}

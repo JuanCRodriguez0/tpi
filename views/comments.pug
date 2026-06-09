@@ -10,18 +10,18 @@ block content
         #navbarSupportedContent.collapse.navbar-collapse
             ul.navbar-nav.me-auto.mb-2.mb-lg-0.gap-3
                 li.nav-item
-                    a.nav-link.active(aria-current="page" href="/home") Inicio
+                    a.nav-link.active(aria-current="page" href="/home") 🏠 Inicio
                 li.nav-item
-                    a.nav-link.active(href="/profile") Perfil
+                    a.nav-link.active(href="/profile") 👤 Perfil
                 li.nav-item
-                    a.btn.btn-outline-light.bg-primary(href="/post/create") + Nueva Publicación
+                    a.btn.btn-outline-light.bg-primary(href="/post/create") 📷 Nueva Publicación
 
         .position-relative.me-3
             input#searchInput.form-control(type="search" placeholder="Buscar usuario o #tag" autocomplete="off" style="width:250px;")
             #searchDropdown.position-absolute.bg-white.border.rounded.shadow(style="display:none; z-index:1000; width:100%; top:100%;")
         
         form(action="/logout" method="POST")
-            button.btn.btn-danger.me-3(type="submit") Cerrar sesión
+            button.btn.btn-danger.me-3(type="submit") ➜] Cerrar sesión
 
     .container.d-flex.justify-content-center.mt-5
 
@@ -69,7 +69,7 @@ block content
                                         small(style="font-size: 1rem;") #{comment.User.userName}
                                         small.text-muted(style="font-size: 0.7rem;") #{new Date(comment.createdAt).toLocaleDateString('es-AR')} #{new Date(comment.createdAt).toLocaleTimeString('es-AR', { hour: '2-digit', minute: '2-digit' })}
                                         if comment.idUser === currentUser.idUser || publicationAuthorId === currentUser.idUser
-                                            a.text-danger(style="font-size: 0.7rem;" href=`/comments/delete/${comment.idComment}`) Eliminar
+                                            a.text-danger(style="font-size: 0.7rem;" href=`/comments/delete/${comment.idComment}`) ❌ Eliminar
                                     small.mb-0(style="font-size: 1.2rem;") #{comment.content}
                                     hr
                         else
