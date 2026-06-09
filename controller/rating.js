@@ -28,10 +28,31 @@ export async function rate(req, res) {
             });
         }
 
-        res.redirect('/home');
+        const allRatings = await Ratingg.findAll({
+            where: { idImage }
+        });
+
+        const total = allRatings.length;
+
+        const avg = total > 0
+            ? (
+                allRatings.reduce((sum, r) => sum + Number(r.score), 0)
+                / total
+            ).toFixed(1)
+            : null;
+
+        return res.json({
+            success: true,
+            score: Number(score),
+            avg,
+            total
+        });
+        
     } catch (error) {
         console.error('[!] Error al calificar:', error);
-        res.redirect('/home');
+        return res.json({
+            success: false
+        });
     }
 }
 

@@ -19,10 +19,15 @@ export async function addInterest(req, res) {
             });
         }
 
-        res.redirect('/home');
+        return res.json({
+            success: true,
+            interested: true
+        });
     } catch (error) {
         console.error(error);
-        res.redirect('/home');
+        return res.json({
+            success: false
+        });
     }
 }
 
@@ -38,9 +43,16 @@ export async function removeInterest(req, res) {
             }
         });
 
-        res.redirect('/home');
+        return res.json({
+            success: true,
+            interested: false
+        });
+
     } catch (error) {
         console.error(error);
-        res.redirect('/home');
+
+        return res.json({
+            success: false
+        });
     }
 }

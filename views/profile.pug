@@ -85,9 +85,17 @@ block content
                                         if pub.idUser === currentUser.idUser
                                             li
                                                 if pub.commentsOpen
-                                                    a.dropdown-item(href=`/post/closeComments/${pub.idPublication}`) ✉️ Cerrar comentarios
-                                                else
-                                                    a.dropdown-item(href=`/post/openComments/${pub.idPublication}`) 📩 Abrir comentarios
+                                                        button.dropdown-item.comments-btn(
+                                                            type="button"
+                                                            data-publication=pub.idPublication
+                                                            data-open="true"
+                                                        ) ✉️ Cerrar comentarios
+                                                    else
+                                                        button.dropdown-item.comments-btn(
+                                                            type="button"
+                                                            data-publication=pub.idPublication
+                                                            data-open="false"
+                                                        ) 📩 Abrir comentarios
                                             li
                                                     a.dropdown-item(href="#" data-bs-toggle="modal" data-bs-target=`#modalEditar-${pub.idPublication}`) 📝 Editar publicación
                                             li
@@ -138,30 +146,43 @@ block content
 
                                         if pub.idUser !== currentUser.idUser
                                             if interestedPublications[pub.idPublication]
-                                                form(action=`/interest/remove/${pub.idPublication}` method="POST")
-                                                    button.btn.btn-dark(type="submit")
+                                                button.btn.btn-dark.interest-btn(
+                                                    type="button"
+                                                    data-publication=pub.idPublication
+                                                    data-interested="true"
+                                                )
                                                         | 💔 Ya no me interesa
                                             else
-                                                form(action=`/interest/add/${pub.idPublication}` method="POST")
-                                                    button.btn.btn-outline-dark(type="submit")
+                                                button.btn.btn-outline-dark.interest-btn(
+                                                    type="button"
+                                                    data-publication=pub.idPublication
+                                                    data-interested="false"
+                                                )
                                                         | ❤️ Me interesa
 
                                         a.btn.btn-outline-dark.d-flex.align-items-center(href=`/comments/${pub.idPublication}`) 
                                             | 💬 Ver comentarios (#{pub.Comments ? pub.Comments.length : 0})
                                         if pub.idUser !== currentUser.idUser
-                                            form(action=`/rating/${pub.idPublication}` method="POST")
-                                                input(type="hidden" name="idImage" value=`${pub.Images[0].idImage}`)
+                                            div.rating-container(
+                                                data-publication=pub.idPublication
+                                                data-image=pub.Images[0].idImage
+                                            )
                                                 .d-flex.gap-1
                                                     each score in [1,2,3,4,5]
-                                                        button.btn.btn-outline-dark.btn-sm(type="submit" name="score" value=`${score}`) #{score}
+                                                        button.btn.btn-outline-dark.btn-sm.rating-btn(
+                                                            type="button"
+                                                            data-score=score
+                                                        ) #{score}
                                                 if ratings[pub.idPublication]
-                                                    small.text-muted Calificaste con #{ratings[pub.idPublication]}
+                                                    small.text-muted.user-rating Calificaste con #{ratings[pub.idPublication]}
                                                 else
-                                                    small.text-muted Sin calificar
+                                                    small.text-muted.user-rating Sin calificar
                                     if ratingsStats[pub.idPublication].avg
-                                        small.text-muted ⭐ (#{ratingsStats[pub.idPublication].avg}) #{ratingsStats[pub.idPublication].total} #{ratingsStats[pub.idPublication].total === 1 ? 'voto' : 'votos'}
+                                        small.text-muted.d-flex.justify-content-center.rating-stats
+                                            | ⭐ (#{ratingsStats[pub.idPublication].avg}) #{ratingsStats[pub.idPublication].total} #{ratingsStats[pub.idPublication].total === 1 ? 'voto' : 'votos'}
                                     else
-                                        small.text-muted Sin votos aún
+                                        small.text-muted.d-flex.justify-content-center.rating-stats
+                                            | Sin votos aún
 
                                 .modal.fade(id=`modalEditar-${pub.idPublication}` tabindex="-1")
                                     .modal-dialog
@@ -308,4 +329,7 @@ block scripts
         });
 
 
-    script(src="/search.js")
+    script(src="/js/search.js")
+    script(src="/js/interest.js")
+    script(src="/js/comments.js")
+    script(src="/js/rating.js")

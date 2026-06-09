@@ -137,26 +137,62 @@ export async function closeComments(req, res) {
     const { idPublication } = req.params;
     const userId = req.session.user.id;
 
-    const publication = await Publication.findByPk(idPublication);
+    try {
+        const publication = await Publication.findByPk(idPublication);
 
-    if (publication.idUser === userId) {
-        await publication.update({ commentsOpen: false });
+        if (!publication || publication.idUser !== userId) {
+            return res.json({
+                success: false
+            });
+        }
+
+        await publication.update({
+            commentsOpen: false
+        });
+
+        return res.json({
+            success: true,
+            commentsOpen: false
+        });
+
+    } catch (error) {
+        console.error(error);
+
+        return res.json({
+            success: false
+        });
     }
-
-    res.redirect('/home');
 }
 
 export async function openComments(req, res) {
     const { idPublication } = req.params;
     const userId = req.session.user.id;
 
-    const publication = await Publication.findByPk(idPublication);
+    try {
+        const publication = await Publication.findByPk(idPublication);
 
-    if (publication.idUser === userId) {
-        await publication.update({ commentsOpen: true });
+        if (!publication || publication.idUser !== userId) {
+            return res.json({
+                success: false
+            });
+        }
+
+        await publication.update({
+            commentsOpen: true
+        });
+
+        return res.json({
+            success: true,
+            commentsOpen: true
+        });
+
+    } catch (error) {
+        console.error(error);
+
+        return res.json({
+            success: false
+        });
     }
-
-    res.redirect('/home');
 }
 
 export async function deletePublication(req, res) {
