@@ -1,5 +1,5 @@
 import { Router } from "express";
-import { addInterest, removeInterest } from "../controller/publicationInterest.js";
+import { addInterest, removeInterest } from "../controller/publicationinterest.js";
 
 const router = Router();
 
