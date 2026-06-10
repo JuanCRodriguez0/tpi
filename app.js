@@ -11,7 +11,7 @@ import ratingRoutes from './routes/rating.js';
 import profileRoutes from './routes/profile.js';
 import { authMiddleware } from './middleware/auth.js';
 import { guestHome } from './controller/home.js';
-import publicationInterestRoutes from './routes/publicationInterest.js';
+import publicationInterestRoutes from './routes/publicationinterest.js';
 
 
 
