@@ -93,6 +93,18 @@ export async function register(req, res) {
         return
     }
 
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(emaill)) {
+        res.status(400).render('auth/register', {
+            alert: {
+                status: "Error",
+                text: "El email no es válido."
+            },
+            formValues: req.body
+        });
+        return;
+    }
+
     if (pass1.length < 6) {
         res.status(400).render('auth/register', {
             alert: {
@@ -125,7 +137,7 @@ export async function register(req, res) {
             res.status(400).render('auth/register', {
                 alert: {
                     status: "Error",
-                    text: "El email ya está registrado. Intente ingresar sesión."
+                    text: "El email ya está registrado. Intente iniciar sesión."
                 },
                 formValues: req.body
             })

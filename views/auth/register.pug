@@ -3,23 +3,24 @@ extends ../layout.pug
 block content 
     .container.d-flex.justify-content-center.mt-5
 
-        
         .card.p-4.position-relative(style="width: 400px;")
-
 
             a.btn.btn-outline-secondary.btn-sm.px-2.py-0.position-absolute.top-0.start-0.m-1(href="/") ← Volver
 
             h1.text-center.mb-4 Registrarse
 
+            if alert
+                .alert.alert-danger.text-center #{alert.text}
+
             form(action="/register" method="POST")
 
                 .mb-3
                     label.form-label Usuario
-                    input.form-control.border-secondary(type="text" name="user")
+                    input.form-control.border-secondary(type="text" name="user" value=formValues ? formValues.user : "")
 
                 .mb-3
                     label.form-label Email
-                    input.form-control.border-secondary(type="text" name="email")
+                    input.form-control.border-secondary(type="text" name="email" value=formValues ? formValues.email : "")
 
                 .mb-3
                     label.form-label Contraseña
@@ -31,11 +32,11 @@ block content
 
                 .mb-3
                     label.form-label Apellido
-                    input.form-control.border-secondary(type="text" name="lastName")
+                    input.form-control.border-secondary(type="text" name="lastName" value=formValues ? formValues.lastName : "")
 
                 .mb-3
                     label.form-label Nombre
-                    input.form-control.border-secondary(type="text" name="name")
+                    input.form-control.border-secondary(type="text" name="name" value=formValues ? formValues.name : "")
 
                 button.btn.btn-primary.w-100(type="submit")
                     | Registrarse

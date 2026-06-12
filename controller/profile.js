@@ -5,6 +5,7 @@ import Image from "../models/Image.js";
 import Ratingg from "../models/Ratingg.js";
 import Tag from '../models/Tag.js';
 import Comment from '../models/Comment.js';
+import PublicationInterest from "../models/PublicationInterest.js";
 
 export async function myProfile(req, res) {
 
@@ -171,7 +172,7 @@ export async function otherProfile(req, res) {
 
         const interests = await PublicationInterest.findAll({
             where: {
-                idUser: currentUserId
+                idUser: loggedInUserId
             }
         });
 

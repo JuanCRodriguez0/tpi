@@ -84,13 +84,3 @@ Publication.belongsToMany(User, {
 });
 
 
-export async function connectDatabase(){
-    try{
-        await sequelize.authenticate();
-        console.log("Database connected.")
-        await sequelize.sync({ alter: true })
-        console.log("Tables synchronized.")
-    }catch (err){
-        console.error(err)
-    }
-}

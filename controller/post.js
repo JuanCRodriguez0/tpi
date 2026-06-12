@@ -12,6 +12,8 @@ export async function create(req, res) {
     const { title, description, etiquetas } = req.body;
     const userId = req.session.user.id;
     let imagenes = req.body.imagenesBase64;
+    let copyrights = req.body.copyright;
+    let watermarks = req.body.watermark;
 
     if (!title || title.trim() === '') {
         return res.render('post/create', {
@@ -28,16 +30,15 @@ export async function create(req, res) {
     }
 
     if (!etiquetas || etiquetas.trim() === '') {
-    return res.render('post/create', {
-        alert: {
-            status: "Error",
-            text: "Debe ingresar al menos una etiqueta."
-        },
-        formValues: req.body
-    });
-}
+        return res.render('post/create', {
+            alert: {
+                status: "Error",
+                text: "Debe ingresar al menos una etiqueta."
+            },
+            formValues: req.body
+        });
+    }
 
-    let copyrights = req.body.copyright;
 
     if (!Array.isArray(copyrights)) {
         copyrights = [copyrights];
@@ -62,8 +63,7 @@ export async function create(req, res) {
             idUser: userId,
         });
 
-        let copyrights = req.body.copyright;
-        let watermarks = req.body.watermark;
+
         if (!Array.isArray(copyrights)) copyrights = [copyrights];
         if (!Array.isArray(watermarks)) watermarks = watermarks ? [watermarks] : [];
 

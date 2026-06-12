@@ -2,7 +2,7 @@ import express from "express";
 import session from "express-session";
 import sequelize from "./db/config.js";
 import "./models/index.js";
-import { connectDatabase } from "./models/index.js";
+import { connectDatabase } from "./db/config.js";
 import authRoutes from './routes/auth.js';
 import homeRoutes from './routes/home.js';
 import postRoutes from './routes/post.js'
