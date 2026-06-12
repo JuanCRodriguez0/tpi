@@ -83,4 +83,16 @@ Publication.belongsToMany(User, {
     foreignKey: "idPublication"
 });
 
-
+export {
+  User,
+  Tag,
+  Publication,
+  Image,
+  Comment,
+  Ratingg,
+  PublicationTag,
+  PublicationReport,
+  Follower,
+  Message,
+  PublicationInterest,
+};

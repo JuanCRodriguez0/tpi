@@ -3,53 +3,53 @@ import { User } from "../models/index.js";
 
 export async function userSeeder() {
 
-  const password = await bcrypt.hash("test123", 10);
+    const passwordHash = await bcrypt.hash("test123", 10);
 
-  const usuarios = [
-    {
-      userName: "JuanCruz",
-      email: "juan@test.com",
-      name: "Juan Cruz",
-      lastName: "Rodriguez",
+    const usuarios = [
+        {
+            userName: "JuanCruz",
+            email: "juan@test.com",
+            name: "Juan Cruz",
+            lastName: "Rodriguez",
 
-    },
-    {
-      userName: "Agus",
-      email: "agus@test.com",
-      name: "Agustin",
-      lastName: "Mazza",
-      
-    },
-    {
-      userName: "Jeremias",
-      email: "jeremias@test.com",
-      name: "Jeremias",
-      lastName: "Hoyo",
-    },
-    {
-      userName: "Test",
-      email: "test@test.com",
-      name: "testName",
-      lastName: "testLastName",
-    },
-  ];
+        },
+        {
+            userName: "Agus",
+            email: "agus@test.com",
+            name: "Agustin",
+            lastName: "Mazza",
 
-  for (const usuario of usuarios) {
+        },
+        {
+            userName: "Jeremias",
+            email: "jeremias@test.com",
+            name: "Jeremias",
+            lastName: "Hoyo",
+        },
+        {
+            userName: "Test",
+            email: "test@test.com",
+            name: "testName",
+            lastName: "testLastName",
+        },
+    ];
 
-    const [user, created] = await User.findOrCreate({
-      where: {
-        email: usuario.email,
-      },
-      defaults: {
-        ...usuario,
-        password,
-      },
-    });
+    for (const usuario of usuarios) {
 
-    if (created) {
-      console.log(`Usuario ${user.userName} creado`);
-    } else {
-      console.log(`Usuario ${user.userName} ya existía`);
+        const [user, created] = await User.findOrCreate({
+            where: {
+                email: usuario.email,
+            },
+            defaults: {
+                ...usuario,
+                passwordHash
+            },
+        });
+
+        if (created) {
+            console.log(`Usuario ${user.userName} creado`);
+        } else {
+            console.log(`Usuario ${user.userName} ya existía`);
+        }
     }
-  }
 }
